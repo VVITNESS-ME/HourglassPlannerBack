@@ -29,9 +29,6 @@ spring:
       show-sql: true
   jwt:
     secret: ${JWT_KEY}
-    token:
-      access-expiration-time: 60
-      refresh-expiration-seconds: 3600
   data:
     redis:
       host: ${REDIS_URL}
