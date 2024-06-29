@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: hourglass
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${RDS_URL}:3306/${RDS_NAME}?serverTimezone=Asia/Seoul
+    username: ${RDS_USER}
+    password: ${RDS_PW}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        dialect: org.hibernate.dialect.MySQLDialect
+        hbm2ddl:
+          auto: create
+      show-sql: true
+  driver:
+    path: chromedriver
+  jwt:
+    secret: ${JWT_KEY}
+    token:
+      access-expiration-time: 60
+      refresh-expiration-seconds: 3600
+  data:
+    redis:
+      host: ${REDIS_URL}
+      port: 6379
+      password: ${REDIS_PASSWORD}

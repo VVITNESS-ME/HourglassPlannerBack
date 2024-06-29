@@ -35,3 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Properties ###
+application-local.properties
+application-dev.properties
+application-qa.properties
+application-prod.properties
+
+application-local.yml
+application-dev.yml
+application-qa.yml
+application-prod.yml
