@@ -3,6 +3,7 @@ package com.myweapon.hourglass.security;
 import com.myweapon.hourglass.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -34,12 +35,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
+        final Cookie[] cookies = request.getCookies();
+//        for(Cookie cookie:cookies){
+//            if(cookie.getName().equals("token")){
+//                authHeader = cookie.getValue();
+//            }
+//        }
         final String jwt;
         final String userEmail;
         //jwt토큰을 안 보낸 경우 그냥 return 
         if(isEmpty(authHeader)||!startsWith(authHeader,"Bearer ")){
-            System.out.println("return");
             filterChain.doFilter(request, response);
             return;
         }

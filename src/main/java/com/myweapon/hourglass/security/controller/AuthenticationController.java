@@ -1,5 +1,6 @@
 package com.myweapon.hourglass.security.controller;
 
+import com.myweapon.hourglass.security.dto.ApiResponse;
 import com.myweapon.hourglass.security.dto.JwtAuthenticationResponse;
 import com.myweapon.hourglass.security.dto.SignInRequest;
 import com.myweapon.hourglass.security.dto.SignUpRequest;
@@ -12,17 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/signup")
+
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request){
+        System.out.println("하이");
         return ResponseEntity.ok(authenticationService.signup(request));
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest request) {
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signin(@RequestBody SignInRequest request) {
         return ResponseEntity.ok(authenticationService.signin(request));
     }
 }

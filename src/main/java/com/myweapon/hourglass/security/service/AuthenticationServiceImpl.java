@@ -1,6 +1,7 @@
 package com.myweapon.hourglass.security.service;
 
 import com.myweapon.hourglass.Exception.RestApiException;
+import com.myweapon.hourglass.security.dto.ApiResponse;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.security.repository.UserRepository;
@@ -48,12 +49,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
-    public JwtAuthenticationResponse signin(SignInRequest request) {
+    public ApiResponse<JwtAuthenticationResponse> signin(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
         User user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(()->new IllegalArgumentException("Invalid email or password"));
         String jwt = jwtService.generateToken(user);
-//        System.out.println(jwt);
-        return JwtAuthenticationResponse.builder().authToken(jwt).build();
+        JwtAuthenticationResponse response = JwtAuthenticationResponse.builder().authToken(jwt).build();
+        return ApiResponse.<JwtAuthenticationResponse>builder().response(response).code("200").build();
     }
 }
