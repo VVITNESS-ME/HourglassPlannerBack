@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.security;
 
-import com.myweapon.hourglass.entity.User;
-import com.myweapon.hourglass.repository.UserRepository;
+import com.myweapon.hourglass.security.entity.User;
+import com.myweapon.hourglass.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +17,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User findUser = userRepository.findUserByEmail(username).orElseThrow(()-> new UsernameNotFoundException("이메일이 존재하지 않습니다."));
-
         return new UserDetailsImpl(findUser, findUser.getEmail());
     }
 }

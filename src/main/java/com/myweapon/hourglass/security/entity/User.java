@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.entity;
+package com.myweapon.hourglass.security.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

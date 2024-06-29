@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.security.jwt;
 
 
-import com.myweapon.hourglass.entity.User;
+import com.myweapon.hourglass.security.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

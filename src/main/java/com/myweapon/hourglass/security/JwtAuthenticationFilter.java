@@ -37,10 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        if(isEmpty(authHeader)&&startsWith(authHeader,"Bearer ")){
+        //jwt토큰을 안 보낸 경우 그냥 return 
+        if(isEmpty(authHeader)||!startsWith(authHeader,"Bearer ")){
+            System.out.println("return");
             filterChain.doFilter(request, response);
             return;
         }
+
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUserName(jwt);
         //유저 정보를 가져와서 컨텍스트에 저장

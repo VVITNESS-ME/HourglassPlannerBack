@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.security.dao;
+package com.myweapon.hourglass.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtAuthenticationResponse {
-    private String authToken;
+public class SignUpRequest {
+    private String email;
+    private String password;
+    private String name;
 }

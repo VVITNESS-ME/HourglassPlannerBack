@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.security.dao;
+package com.myweapon.hourglass.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

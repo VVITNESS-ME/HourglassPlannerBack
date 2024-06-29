@@ -1,11 +1,9 @@
 package com.myweapon.hourglass.repository;
 
 import com.myweapon.hourglass.UserData;
-import com.myweapon.hourglass.entity.User;
+import com.myweapon.hourglass.security.entity.User;
+import com.myweapon.hourglass.security.repository.UserRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

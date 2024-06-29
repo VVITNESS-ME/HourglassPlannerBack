@@ -1,8 +1,7 @@
 package com.myweapon.hourglass.security;
 
-import com.myweapon.hourglass.entity.User;
+import com.myweapon.hourglass.security.entity.User;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +40,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getPassword();
     }
 
     @Override

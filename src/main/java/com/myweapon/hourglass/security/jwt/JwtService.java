@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.security.jwt;
 
-import com.myweapon.hourglass.entity.User;
+import com.myweapon.hourglass.security.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {
