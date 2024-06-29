@@ -24,12 +24,9 @@ spring:
       hibernate:
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        dialect: org.hibernate.dialect.MySQLDialect
         hbm2ddl:
           auto: create
       show-sql: true
-  driver:
-    path: chromedriver
   jwt:
     secret: ${JWT_KEY}
     token:
