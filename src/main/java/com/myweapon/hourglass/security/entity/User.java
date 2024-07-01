@@ -22,4 +22,12 @@ public class User {
         this.password = password;
         this.name = name;
     }
+
+    public static User of(String email,String password,String name){
+        return User.builder()
+                .email(email)
+                .password(password)
+                .name(name)
+                .build();
+    }
 }

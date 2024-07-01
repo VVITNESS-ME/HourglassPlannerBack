@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
     private final User user;
-    private final String email;
+    private final String name;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -45,6 +45,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return name;
     }
 }

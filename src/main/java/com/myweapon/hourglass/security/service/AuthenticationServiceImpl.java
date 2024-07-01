@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.security.service;
 
-import com.myweapon.hourglass.Exception.RestApiException;
 import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.security.repository.UserRepository;
@@ -12,7 +12,6 @@ import com.myweapon.hourglass.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             throw new RestApiException(ErrorType.DUPLICATED_NAME);
         }
 
-        User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .name(request.getName())
-                .build();
+        User user = User.of(request.getEmail(),passwordEncoder.encode(request.getPassword()), request.getName());
 
         userRepository.save(user);
         String jwt = jwtService.generateToken(user);
@@ -52,9 +47,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signin(SignInRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
         User user = userRepository.findUserByEmail(request.getEmail())
-                .orElseThrow(()->new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(()-> new RestApiException(ErrorType.NO_EMAIL_OR_PASSWORD));
+
+        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
+            throw new RestApiException(ErrorType.NO_EMAIL_OR_PASSWORD);
+        }
         String jwt = jwtService.generateToken(user);
         JwtAuthenticationResponse data = JwtAuthenticationResponse.of(jwt);
         return ResponseEntity.ok(ApiResponse.<JwtAuthenticationResponse>success(data));

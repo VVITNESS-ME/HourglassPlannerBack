@@ -14,7 +14,7 @@ public class JwtAuthenticationResponse {
 
     public static JwtAuthenticationResponse of(String authToken){
         return JwtAuthenticationResponse.builder()
-                .authToken(authToken)
+                .authToken("Bearer+"+authToken)
                 .build();
     }
 }

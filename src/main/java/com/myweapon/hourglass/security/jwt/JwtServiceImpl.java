@@ -1,18 +1,14 @@
 package com.myweapon.hourglass.security.jwt;
 
 
-import com.myweapon.hourglass.Exception.JwtException;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.security.enumset.ErrorType;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -70,7 +66,7 @@ public class JwtServiceImpl implements JwtService{
     }
     private String generateToken(Map<String, Objects> extraClaims,User user){
         return Jwts.builder()
-                .setClaims(extraClaims).setSubject(user.getEmail())
+                .setClaims(extraClaims).setSubject(user.getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+TOKEN_TIME))
                 .signWith(key, signatureAlgorithm)

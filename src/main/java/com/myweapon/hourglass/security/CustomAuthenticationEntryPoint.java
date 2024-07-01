@@ -33,7 +33,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         if(errorType.equals(ErrorType.NOT_VALID_TOKEN)){
             exceptionHandler(response, ErrorType.NOT_VALID_TOKEN);
-            return;
         }
     }
     public void exceptionHandler(HttpServletResponse response,ErrorType errorType){

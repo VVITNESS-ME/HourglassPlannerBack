@@ -21,6 +21,7 @@ public class ApiResponse<T> {
         return ApiResponse.<T>builder()
                 .code("200")
                 .message("success")
+                .response(data)
                 .build();
     }
 
