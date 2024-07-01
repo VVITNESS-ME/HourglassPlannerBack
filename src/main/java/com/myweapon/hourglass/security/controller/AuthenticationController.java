@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.security.controller;
 
-import com.myweapon.hourglass.security.dto.ApiResponse;
+import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.security.dto.JwtAuthenticationResponse;
 import com.myweapon.hourglass.security.dto.SignInRequest;
 import com.myweapon.hourglass.security.dto.SignUpRequest;
@@ -19,12 +19,12 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/signup")
 
-    public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request){
-        return ResponseEntity.ok(authenticationService.signup(request));
+    public ResponseEntity<ApiResponse<JwtAuthenticationResponse>>  signup(@RequestBody SignUpRequest request){
+        return authenticationService.signup(request);
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signin(@RequestBody SignInRequest request) {
-        return ResponseEntity.ok(authenticationService.signin(request));
+        return authenticationService.signin(request);
     }
 }

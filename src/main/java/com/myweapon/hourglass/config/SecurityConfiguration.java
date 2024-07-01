@@ -30,12 +30,11 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
     private final CorsConfigurationSource corsConfigurationSource;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         //UsernamePasswordAuthenticationFilter는 http요청으로부터 이름과 비밀번호를 추출하고 Authentication 객체를 준비
         //이것은 db에서 실제로 가져와서 비교까지 하는건지 아니면, 요청으로부터 온 데이터만으로 Authentication을 만드는지는 모르겠음.
-        AuthenticationEntryPoint authenticationEntryPoint = ((request, response, authException)
-                -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"));
         AccessDeniedHandler accessDeniedHandler = ((request, response, accessDeniedException)
                 -> response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"));
 

@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.security.service;
 
 import com.myweapon.hourglass.Exception.RestApiException;
-import com.myweapon.hourglass.security.dto.ApiResponse;
+import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.security.repository.UserRepository;
@@ -10,6 +10,7 @@ import com.myweapon.hourglass.security.dto.SignInRequest;
 import com.myweapon.hourglass.security.dto.SignUpRequest;
 import com.myweapon.hourglass.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public JwtAuthenticationResponse signup(SignUpRequest request) {
+    public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signup(SignUpRequest request) {
         Optional<User> foundByEmail = userRepository.findUserByEmail(request.getEmail());
         if(foundByEmail.isPresent()){
             throw new RestApiException(ErrorType.DUPLICATED_EMAIL);
@@ -45,16 +46,17 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         userRepository.save(user);
         String jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder().authToken(jwt).build();
+        JwtAuthenticationResponse data = JwtAuthenticationResponse.of(jwt);
+        return ResponseEntity.ok(ApiResponse.<JwtAuthenticationResponse>success(data));
     }
 
     @Override
-    public ApiResponse<JwtAuthenticationResponse> signin(SignInRequest request) {
+    public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signin(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
         User user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(()->new IllegalArgumentException("Invalid email or password"));
         String jwt = jwtService.generateToken(user);
-        JwtAuthenticationResponse response = JwtAuthenticationResponse.builder().authToken(jwt).build();
-        return ApiResponse.<JwtAuthenticationResponse>builder().response(response).code("200").build();
+        JwtAuthenticationResponse data = JwtAuthenticationResponse.of(jwt);
+        return ResponseEntity.ok(ApiResponse.<JwtAuthenticationResponse>success(data));
     }
 }

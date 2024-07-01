@@ -4,11 +4,11 @@ package com.myweapon.hourglass.security.jwt;
 import com.myweapon.hourglass.Exception.JwtException;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 @Slf4j
@@ -30,6 +27,14 @@ public class JwtServiceImpl implements JwtService{
 
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+    private Key key;
+    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+    @PostConstruct
+    public void init(){
+        byte[] bytes = Base64.getDecoder().decode(jwtSigningKey);
+        key = Keys.hmacShaKeyFor(bytes);
+    }
 
     @Override
     public String extractUserName(String token) {
@@ -42,17 +47,22 @@ public class JwtServiceImpl implements JwtService{
     }
 
     @Override
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractUserName(token);
-        if(!email.equals(userDetails.getUsername())){
-            log.info("User isn't exist.");
-            return false;
+    public boolean validateToken(String token) {
+        try{
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
         }
-        if(!isTokenExpired(token)){
-            log.info("JWT expired.");
-            return false;
+        catch (SecurityException | MalformedJwtException e) {
+            log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token, 만료된 JWT token 입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
-        return true;
+
+        return false;
     }
     private <T> T extractClaim(String token, Function<Claims,T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
@@ -63,24 +73,12 @@ public class JwtServiceImpl implements JwtService{
                 .setClaims(extraClaims).setSubject(user.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+TOKEN_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(key, signatureAlgorithm)
                 .compact();
-    }
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
                 .getBody();
     }
-
-    private Key getSigningKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
 }

@@ -26,6 +26,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ErrorType errorType = (ErrorType)request.getAttribute("exception");
+        if(errorType==null){
+            exceptionHandler(response, ErrorType.UNKNOWN_ERROR);
+            return;
+        }
 
         if(errorType.equals(ErrorType.NOT_VALID_TOKEN)){
             exceptionHandler(response, ErrorType.NOT_VALID_TOKEN);
