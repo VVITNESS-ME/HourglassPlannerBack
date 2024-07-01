@@ -1,5 +1,6 @@
-package com.myweapon.hourglass.security;
+package com.myweapon.hourglass.security.jwt;
 
+import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,9 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,31 +35,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
+        try{
+            jwtFilterLogic(request,response,filterChain);
+        }catch (Exception e){
+            filterChain.doFilter(request,response);
+        }
+    }
 
-        String authHeader = request.getHeader("Authorization");
+    private void jwtFilterLogic(@NonNull HttpServletRequest request,
+                                @NonNull HttpServletResponse response,
+                                @NonNull FilterChain filterChain) throws ServletException, IOException{
+        String authCookie = null;
         final Cookie[] cookies = request.getCookies();
-//        for(Cookie cookie:cookies){
-//            if(cookie.getName().equals("token")){
-//                authHeader = cookie.getValue();
-//            }
-//        }
+        if(ObjectUtils.isEmpty(cookies)){
+            filterChain.doFilter(request,response);
+            return;
+        }
+        for(Cookie cookie:cookies){
+            if(cookie.getName().equals("token")){
+                System.out.println(cookie.getValue());
+                authCookie = cookie.getValue();
+            }
+        }
         final String jwt;
         final String userEmail;
-        //jwt토큰을 안 보낸 경우 그냥 return 
-        if(isEmpty(authHeader)||!startsWith(authHeader,"Bearer ")){
+        //jwt토큰을 안 보낸 경우 그냥 return
+        if(isEmpty(authCookie)||!startsWith(authCookie,"Bearer+")){
+            request.setAttribute("exception", ErrorType.NOT_VALID_TOKEN);
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
+        jwt = authCookie.substring(7);
         userEmail = jwtService.extractUserName(jwt);
         //유저 정보를 가져와서 컨텍스트에 저장
         if(StringUtils.isNotEmpty((userEmail)) && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenValid(jwt,userDetails)){
-                //setAuthentication
-                setAuthentication(userDetails,request);
+            if(!jwtService.validateToken(jwt,userDetails)){
+                request.setAttribute("exception", ErrorType.NOT_VALID_TOKEN);
+                filterChain.doFilter(request,response);
+                return;
             }
+            //setAuthentication
+            setAuthentication(userDetails,request);
         }
         filterChain.doFilter(request,response);
     }
