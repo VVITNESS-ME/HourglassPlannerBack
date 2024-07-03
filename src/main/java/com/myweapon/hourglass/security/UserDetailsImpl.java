@@ -2,6 +2,7 @@ package com.myweapon.hourglass.security;
 
 import com.myweapon.hourglass.security.entity.User;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 @Builder
 @RequiredArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private final User user;
     private final String name;

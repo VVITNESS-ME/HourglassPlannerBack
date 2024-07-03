@@ -1,7 +1,11 @@
 package com.myweapon.hourglass.security.entity;
 
+import com.myweapon.hourglass.timer.entity.UserCategory;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -15,6 +19,9 @@ public class User {
     private String email;
     private String password;
     private String name;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserCategory> userCategories = new ArrayList<>();
 
     @Builder
     private User(String email,String password,String name){

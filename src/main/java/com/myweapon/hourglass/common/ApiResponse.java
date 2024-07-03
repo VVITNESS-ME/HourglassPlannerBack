@@ -24,5 +24,4 @@ public class ApiResponse<T> {
                 .response(data)
                 .build();
     }
-
 }

@@ -15,4 +15,8 @@ public class TestController {
     public ResponseEntity<TestDto> signup(@RequestBody SignUpRequest request){
         return ResponseEntity.ok(TestDto.builder().result("성공").build());
     }
+    @PostMapping("/")
+    public ResponseEntity<TestDto> hi(@RequestBody SignUpRequest request){
+        return ResponseEntity.ok(TestDto.builder().result("성공").build());
+    }
 }
