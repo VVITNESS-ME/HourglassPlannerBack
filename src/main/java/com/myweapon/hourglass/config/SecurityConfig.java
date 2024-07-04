@@ -35,11 +35,12 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagementConfig ->
                         sessionManagementConfig
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/auth/login", "/auth/signup").permitAll()
-                    .anyRequest().authenticated()
-                )
+//                .addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+//                .authorizeHttpRequests(authorize -> authorize
+//                    .requestMatchers("/auth/login", "/auth/signup").permitAll()
+//                    .anyRequest().authenticated()
+//                )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
                                 .authenticationEntryPoint(authenticationEntryPoint)

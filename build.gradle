@@ -45,6 +45,9 @@ dependencies {
 
 	// MySQL JDBC driver
 	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// Websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {

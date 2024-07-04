@@ -46,3 +46,6 @@ application-local.yml
 application-dev.yml
 application-qa.yml
 application-prod.yml
+
+### Local HTTPS Secret Key ###
+keystore.p12
