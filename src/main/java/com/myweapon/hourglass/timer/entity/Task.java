@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.NumericBooleanConverter;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

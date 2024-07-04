@@ -3,6 +3,7 @@ package com.myweapon.hourglass.timer.entity;
 import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.common.TimeUtils;
 import com.myweapon.hourglass.security.enumset.ErrorType;
+import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -71,6 +72,18 @@ public class Hourglass {
                 .build();
     }
 
+    public Boolean end(UserCategory userCategory, HourglassEndRequest request){
+        LocalDateTime now = LocalDateTime.now();
+
+        task.setUserCategory(userCategory);
+        end = now;
+        burstTime = request.getTimeBurst();
+        rating = request.getRating();
+        content = request.getContent();
+
+        return true;
+    }
+
     public Boolean pause(){
         LocalDateTime now = LocalDateTime.now();
 
@@ -94,11 +107,9 @@ public class Hourglass {
         if(last_pause == null){
             return false;
         }
-        else if (last_resume == null) {
+        else if (last_resume == null || last_resume.isBefore(last_pause)){
             last_resume = now;
-        }
-        else if(last_resume.isBefore(last_pause)){
-            last_resume = now;
+            return true;
         }
         return false;
     }

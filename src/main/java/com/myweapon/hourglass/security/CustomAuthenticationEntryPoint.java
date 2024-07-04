@@ -27,16 +27,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ErrorType errorType = (ErrorType)request.getAttribute("exception");
         if(errorType==null){
-            exceptionHandler(response, ErrorType.UNKNOWN_ERROR);
+            exceptionHandler(response, ErrorType.UNKNOWN_ERROR_AUTHENTICATION_FAILED);
             return;
         }
-
-        if(errorType.equals(ErrorType.NOT_VALID_TOKEN)){
-            exceptionHandler(response, ErrorType.NOT_VALID_TOKEN);
-        }
+        exceptionHandler(response,errorType);
     }
     public void exceptionHandler(HttpServletResponse response,ErrorType errorType){
-        response.setStatus(errorType.getCode());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {

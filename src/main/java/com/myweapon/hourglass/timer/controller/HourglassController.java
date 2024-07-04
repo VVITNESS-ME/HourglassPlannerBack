@@ -27,7 +27,7 @@ public class HourglassController {
     @PostMapping("/end")
     public ResponseEntity<ApiResponse<HourglassResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return hourglassService.endHourglass(hourglassEndRequest);
+        return hourglassService.endHourglass(hourglassEndRequest,userDetails.getUser());
     }
     @PostMapping("/pause")
     public ResponseEntity<ApiResponse<HourglassResponse>> pauseHourglass(@RequestBody HourglassPauseRequest hourglassPauseRequest){

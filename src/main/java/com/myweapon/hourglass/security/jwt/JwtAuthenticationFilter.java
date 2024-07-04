@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String jwt;
-        final String userEmail;
+        final String userName;
         //jwt토큰을 안 보낸 경우 그냥 return
         if(!startsWith(authToken,"Bearer+")){
             request.setAttribute("exception", ErrorType.NOT_VALID_TOKEN);
@@ -70,10 +70,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-
-        userEmail = jwtService.extractUserName(jwt);
-        if(StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        userName = jwtService.extractUserName(jwt);
+        System.out.println(userName);
+        if(StringUtils.isNotEmpty(userName) && SecurityContextHolder.getContext().getAuthentication()==null){
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             setAuthentication(userDetails,request);
         }
         filterChain.doFilter(request,response);

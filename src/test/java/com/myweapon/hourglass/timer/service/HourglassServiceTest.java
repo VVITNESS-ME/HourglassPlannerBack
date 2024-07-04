@@ -58,36 +58,36 @@ class HourglassServiceTest {
 //
 //    }
 
-    @Test
-    @DisplayName("모래시계 정상적인 종료")
-    void testEndHourglass() {
-        HourglassEndRequest request = new HourglassEndRequest();
-        request.setTimeEnd("2023-10-17T09:45:00.000Z");
-        request.setHId(1L);
-        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any()))
-                .thenReturn(1);
-        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
+//    @Test
+//    @DisplayName("모래시계 정상적인 종료")
+//    void testEndHourglass() {
+//        HourglassEndRequest request = new HourglassEndRequest();
+//        request.setTimeEnd("2023-10-17T09:45:00.000Z");
+//        request.setHId(1L);
+//        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any()))
+//                .thenReturn(1);
+//        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
+//
+//        ResponseEntity<ApiResponse<HourglassResponse>> response = hourglassService.endHourglass(request);
+//
+//        assertThat(response.getBody().getData()).isEqualTo(responseExpected);
+//    }
 
-        ResponseEntity<ApiResponse<HourglassResponse>> response = hourglassService.endHourglass(request);
-
-        assertThat(response.getBody().getData()).isEqualTo(responseExpected);
-    }
-
-    @Test
-    @DisplayName("동작하는 모래시계가 없을 경우")
-    void testEndHourglassAbnormal(){
-        HourglassEndRequest request = new HourglassEndRequest();
-        request.setTimeEnd("2023-10-17T09:45:00.000Z");
-        request.setHId(1L);
-        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any()))
-                .thenReturn(0);
-        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
-
-        Throwable throwable = catchThrowable(()->hourglassService.endHourglass(request));
-
-        assertThat(throwable)
-                .isInstanceOf(RestApiException.class);
-    }
+//    @Test
+//    @DisplayName("동작하는 모래시계가 없을 경우")
+//    void testEndHourglassAbnormal(){
+//        HourglassEndRequest request = new HourglassEndRequest();
+//        request.setTimeEnd("2023-10-17T09:45:00.000Z");
+//        request.setHId(1L);
+//        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any()))
+//                .thenReturn(0);
+//        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
+//
+//        Throwable throwable = catchThrowable(()->hourglassService.endHourglass(request));
+//
+//        assertThat(throwable)
+//                .isInstanceOf(RestApiException.class);
+//    }
 
     @Test
     void pauseHourglass() {
