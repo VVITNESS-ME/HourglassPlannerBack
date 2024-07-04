@@ -27,5 +27,4 @@ public class Category {
                 .name(defaultCategory.getName())
                 .build();
     }
-
 }

@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService{
-    private static final int TOKEN_TIME = 1000*60*24;
+    private static final long TOKEN_TIME = 1000*60*60*24*180L;
 
     @Value("${token.signing.key}")
     private String jwtSigningKey;

@@ -3,9 +3,7 @@ package com.myweapon.hourglass.timer.controller;
 import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.security.UserDetailsImpl;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
-import com.myweapon.hourglass.timer.dto.HourglassResponse;
-import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
+import com.myweapon.hourglass.timer.dto.*;
 import com.myweapon.hourglass.timer.service.HourglassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +27,15 @@ public class HourglassController {
     @PostMapping("/end")
     public ResponseEntity<ApiResponse<HourglassResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!"+hourglassEndRequest);
-        return hourglassService.endHourglass(hourglassEndRequest,userDetails);
+        return hourglassService.endHourglass(hourglassEndRequest);
+    }
+    @PostMapping("/pause")
+    public ResponseEntity<ApiResponse<HourglassResponse>> pauseHourglass(@RequestBody HourglassPauseRequest hourglassPauseRequest){
+        return hourglassService.pauseHourglass(hourglassPauseRequest);
+    }
+
+    @PostMapping("/restart")
+    public ResponseEntity<ApiResponse<HourglassResponse>> resumeHourglass(@RequestBody HourglassResumeRequest hourglassPauseRequest){
+        return hourglassService.resumeHourglass(hourglassPauseRequest);
     }
 }

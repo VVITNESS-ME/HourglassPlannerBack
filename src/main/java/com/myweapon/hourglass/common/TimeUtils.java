@@ -9,7 +9,7 @@ public class TimeUtils {
         System.out.println(timeString);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_FORMAT);
         String pureFormat = timeString.replace('T',' ').substring(0,timeString.length()-5);
-        System.out.println(pureFormat);
-        return LocalDateTime.parse(pureFormat,formatter);
+        LocalDateTime standard_time =  LocalDateTime.parse(pureFormat,formatter);
+        return standard_time.plusHours(9);
     }
 }

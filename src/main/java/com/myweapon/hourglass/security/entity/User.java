@@ -15,13 +15,12 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable = false)
     private Long id;
-
     private String email;
     private String password;
     private String name;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserCategory> userCategories = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<UserCategory> userCategories = new ArrayList<>();
 
     @Builder
     private User(String email,String password,String name){

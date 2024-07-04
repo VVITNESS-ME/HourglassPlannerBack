@@ -1,6 +1,8 @@
 package com.myweapon.hourglass.timer.entity;
 
+import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -38,28 +40,67 @@ public class Hourglass {
     private Integer goal;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime pause_time;
+    private LocalDateTime last_pause;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime resume_time;
+    private LocalDateTime last_resume;
+
+    private String content;
+    private Float rating;
 
     @Builder
-    public Hourglass(Task task, LocalDateTime start, LocalDateTime end, Integer burstTime, Integer goal, LocalDateTime pause_time, LocalDateTime resume_time) {
+    public Hourglass(Task task, LocalDateTime start, LocalDateTime end
+            , Integer burstTime, Integer goal, LocalDateTime last_pause
+            , LocalDateTime last_resume, String content, Float rating) {
         this.task = task;
         this.start = start;
         this.end = end;
         this.burstTime = burstTime;
         this.goal = goal;
-        this.pause_time = pause_time;
-        this.resume_time = resume_time;
+        this.last_pause = last_pause;
+        this.last_resume = last_resume;
+        this.content = content;
+        this.rating = rating;
     }
 
     public static Hourglass toStartHourglass(HourglassStartRequest request){
         LocalDateTime localDateTime = TimeUtils.formatString(request.getTimeStart());
-        System.out.println("!!");
         return Hourglass.builder()
                 .start(localDateTime)
                 .goal(request.getTimeGoal())
                 .build();
     }
+
+    public Boolean pause(){
+        LocalDateTime now = LocalDateTime.now();
+
+        if(last_pause==null){
+            last_pause = now;
+            return true;
+        }
+        else if(last_resume==null){
+            return false;
+        }
+        else if(last_pause.isBefore(last_resume)) {
+            last_pause = now;
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean resume(){
+        LocalDateTime now = LocalDateTime.now();
+
+        if(last_pause == null){
+            return false;
+        }
+        else if (last_resume == null) {
+            last_resume = now;
+        }
+        else if(last_resume.isBefore(last_pause)){
+            last_resume = now;
+        }
+        return false;
+    }
+
 }

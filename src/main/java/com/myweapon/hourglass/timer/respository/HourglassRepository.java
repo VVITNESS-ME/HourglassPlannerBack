@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public interface HourglassRepository extends JpaRepository<Hourglass,Long> {
     @Transactional
     @Modifying
-    @Query("update Hourglass h set h.end = :end, h.burstTime = :burst where h.id = :hid")
-    public void updateEndAndBurstById(@Param("hid") Long hid, @Param("end") LocalDateTime end, @Param("burst") Integer burst);
-
+    @Query("update Hourglass h set h.end = :end, h.burstTime = :burst, h.rating =:rating, h.content =:content where h.id = :hid")
+    public Integer updateToEnd(@Param("hid") Long hid, @Param("end") LocalDateTime end
+            , @Param("burst") Integer burst, @Param("rating") Float rating, @Param("content") String content);
 }

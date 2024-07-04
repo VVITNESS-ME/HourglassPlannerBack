@@ -23,7 +23,13 @@ public class StudyTest {
     }
 
     @Test
-    public void TimeUtilsTest(){
+    public void timeUtilsTest(){
         System.out.println(TimeUtils.formatString("2024-07-02T13:52:48.196Z"));;
+    }
+
+    @Test
+    public void dateTimeNow(){
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
     }
 }

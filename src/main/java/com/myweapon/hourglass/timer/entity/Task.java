@@ -26,7 +26,6 @@ public class Task {
     private UserCategory userCategory;
 
     private String title;
-    private Float rating;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime date;
@@ -35,19 +34,17 @@ public class Task {
     @Column(name="is_completed")
     private Boolean isCompleted;
 
-    @Lob
-    private String content;
-
     @Builder
-    public Task(UserCategory userCategory, String title, Float rating, LocalDateTime date, Boolean isCompleted, String content) {
+    public Task(UserCategory userCategory, String title, LocalDateTime date, Boolean isCompleted) {
         this.userCategory = userCategory;
         this.title = title;
-        this.rating = rating;
         this.date = date;
         this.isCompleted = isCompleted;
-        this.content = content;
     }
 
+    /*
+       task를 지정하지 않은 모래시계를 위한 task를 만든다.
+    */
     public static Task defaultOf(UserCategory userCategory){
         return Task.builder()
                 .userCategory(userCategory)

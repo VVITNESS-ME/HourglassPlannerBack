@@ -17,15 +17,13 @@ public class CategoryService {
     @PostConstruct
     public void defaultCategoryInit(){
         for(DefaultCategory defaultCategory : DefaultCategory.values()){
-            Optional<Category> optionalCategory = categoryRepository.findByName(defaultCategory.getName());
-            Category category;
-            if(optionalCategory.isPresent()){
-                category = optionalCategory.get();
-            }
-            else{
-                category = Category.of(defaultCategory);
-                categoryRepository.save(category);
-            }
+            Category category = categoryRepository.findByName(defaultCategory.getName())
+                    .orElseGet(()-> {
+                        Category categoryToPersist = Category.of(defaultCategory);
+                        categoryRepository.save(categoryToPersist);
+                        return categoryToPersist;
+                    });
+
             defaultCategory.setId(category.getId());
         }
     }
