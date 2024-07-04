@@ -48,15 +48,15 @@ class HourglassServiceTest {
     @InjectMocks //생성한 mock 객체들을 주입해준다.
     private HourglassService hourglassService;
 
-    @Test
-    @DisplayName("모래시계 시작 test")
-    void startHourglass() {
-        Mockito.sp
-        User user = User.of("shane@naver.com","123","h");
-        UserDetailsImpl testUserDetailsImpl =  new UserDetailsImpl(user,user.getName());
-        when(userHourglassRepository.findUserHourglassNotEndByUserId())
-
-    }
+//    @Test
+//    @DisplayName("모래시계 시작 test")
+//    void startHourglass() {
+//        Mockito.sp
+//        User user = User.of("shane@naver.com","123","h");
+//        UserDetailsImpl testUserDetailsImpl =  new UserDetailsImpl(user,user.getName());
+//        when(userHourglassRepository.findUserHourglassNotEndByUserId())
+//
+//    }
 
     @Test
     @DisplayName("모래시계 정상적인 종료")
