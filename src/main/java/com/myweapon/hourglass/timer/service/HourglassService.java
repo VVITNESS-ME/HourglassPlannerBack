@@ -44,12 +44,12 @@ public class HourglassService {
                     return new RestApiException(ErrorType.USER_CATEGORY_NOT_EXISTS);
                 });
 
-        Task task = Task.defaultOf(userCategory);
+        Task task = taskRepository.findDefaultTaskByCategoryName(DefaultCategory.OTHERS.getName())
+                .orElseThrow();
 
         Hourglass hourglass = Hourglass.toStartHourglass(request);
         hourglass.setTask(task);
 
-        taskRepository.save(task);
         hourglassRepository.save(hourglass);
 
         return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHourGlass(hourglass)));
@@ -62,10 +62,10 @@ public class HourglassService {
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
 
-        UserCategory userCategory = userCategoryRepository.findByUserAndCategoryName(user.getId(),request.getCategoryName())
-                .orElseThrow(()->new RestApiException(ErrorType.USER_CATEGORY_NOT_EXISTS));
+        Task task = taskRepository.findDefaultTaskByCategoryName(request.getCategoryName())
+                .orElseThrow(()->new RestApiException((ErrorType.USER_CATEGORY_NOT_EXISTS)));
 
-        hourglass.end(userCategory,request);
+        hourglass.end(task,request);
         em.flush();
 
         List<StudySummeryWithCategoryName> resultSummary = getResultSummery(user);

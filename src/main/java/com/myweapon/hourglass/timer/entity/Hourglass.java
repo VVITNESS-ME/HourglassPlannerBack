@@ -76,9 +76,8 @@ public class Hourglass {
     /*
     !주의 : userCategory는 항상 영속 상태의 엔티티만 넣어야 함.
      */
-    public Boolean end(UserCategory userCategory, HourglassEndRequest request){
-
-        task.setUserCategory(userCategory);
+    public Boolean end(Task task, HourglassEndRequest request){
+        this.task = task;
         end = request.getTimeEnd();
         burstTime = request.getTimeBurst();
         rating = request.getRating();
