@@ -8,7 +8,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
-import sun.misc.SignalHandler;
 
 @Configuration
 @EnableWebSocket
@@ -16,7 +15,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(signalSocketHandler(), "/signal")
-                .setAllowedOrigins("*");
+                .setAllowedOrigins("https://jungle5105.xyz:12346");
     }
 
     // WebSocket 메시지를 처리하는 WebSocket 핸들러 빈을 생성
