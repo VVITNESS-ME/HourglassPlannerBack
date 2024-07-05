@@ -1,6 +1,7 @@
 package com.myweapon.hourglass.config;
 
 import com.myweapon.hourglass.webchat.util.SignalingSocketHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
@@ -12,10 +13,14 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
+
+//    @Value("${client.server.domain}")
+//    private String clientServerDomain;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(signalSocketHandler(), "/signal")
-                .setAllowedOrigins("https://jungle5105.xyz:12346");
+                .setAllowedOrigins("*"); // 필요한 경우 특정 도메인을 지정
     }
 
     // WebSocket 메시지를 처리하는 WebSocket 핸들러 빈을 생성
