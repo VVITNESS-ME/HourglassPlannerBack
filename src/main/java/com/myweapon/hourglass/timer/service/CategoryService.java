@@ -7,6 +7,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,14 +18,16 @@ public class CategoryService {
 
     @PostConstruct
     public void defaultCategoryInit(){
+        List<Category> categories = new ArrayList<>();
         for(DefaultCategory defaultCategory : DefaultCategory.values()){
             Category category = categoryRepository.findByName(defaultCategory.getName())
                     .orElseGet(()-> {
                         Category categoryToPersist = Category.of(defaultCategory);
-                        categoryRepository.save(categoryToPersist);
+                        categories.add(categoryToPersist);
                         return categoryToPersist;
                     });
 
+            categoryRepository.saveAll(categories);
             defaultCategory.setId(category.getId());
         }
     }

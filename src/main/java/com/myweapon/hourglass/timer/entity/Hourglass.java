@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Slf4j
 @Table(name="hour_glass")
 public class Hourglass {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,22 +67,22 @@ public class Hourglass {
     }
 
     public static Hourglass toStartHourglass(HourglassStartRequest request){
-        LocalDateTime localDateTime = TimeUtils.formatString(request.getTimeStart());
         return Hourglass.builder()
-                .start(localDateTime)
+                .start(request.getTimeStart())
                 .goal(request.getTimeGoal())
                 .build();
     }
 
+    /*
+    !주의 : userCategory는 항상 영속 상태의 엔티티만 넣어야 함.
+     */
     public Boolean end(UserCategory userCategory, HourglassEndRequest request){
-        LocalDateTime now = LocalDateTime.now();
 
         task.setUserCategory(userCategory);
-        end = now;
+        end = request.getTimeEnd();
         burstTime = request.getTimeBurst();
         rating = request.getRating();
         content = request.getContent();
-
         return true;
     }
 

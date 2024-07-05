@@ -1,9 +1,8 @@
 package com.myweapon.hourglass.timer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.myweapon.hourglass.common.TimeUtils;
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
-import com.myweapon.hourglass.timer.respository.TaskRepository;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +26,10 @@ public class HourglassEndRequest {
     private String categoryName;
     private Float rating;
     private String content;
+
+    public LocalDateTime getTimeEnd(){
+        return TimeUtils.inputFormatString(timeEnd);
+    }
 
     public String getCategoryName(){
         if(categoryName==null){

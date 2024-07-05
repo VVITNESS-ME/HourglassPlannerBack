@@ -22,10 +22,10 @@ public class HourglassController {
     @PostMapping("/start")
     public ResponseEntity<ApiResponse<HourglassResponse>> startHourglass(@RequestBody HourglassStartRequest hourglassStartRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return hourglassService.startHourglass(hourglassStartRequest,userDetails);
+        return hourglassService.startHourglass(hourglassStartRequest,userDetails.getUser());
     }
     @PostMapping("/end")
-    public ResponseEntity<ApiResponse<HourglassResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
+    public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
         return hourglassService.endHourglass(hourglassEndRequest,userDetails.getUser());
     }

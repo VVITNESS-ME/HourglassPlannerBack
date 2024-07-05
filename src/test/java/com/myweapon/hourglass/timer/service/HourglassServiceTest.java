@@ -7,6 +7,12 @@ import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.HourglassResponse;
+import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
+import com.myweapon.hourglass.timer.dto.HourglassSummaryResponse;
+import com.myweapon.hourglass.timer.entity.Category;
+import com.myweapon.hourglass.timer.entity.Task;
+import com.myweapon.hourglass.timer.entity.UserCategory;
+import com.myweapon.hourglass.timer.enumset.DefaultCategory;
 import com.myweapon.hourglass.timer.respository.HourglassRepository;
 import com.myweapon.hourglass.timer.respository.TaskRepository;
 import com.myweapon.hourglass.timer.respository.UserCategoryRepository;
@@ -17,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,6 +31,7 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.ResponseEntity;
 
 import java.lang.reflect.Member;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,11 +59,25 @@ class HourglassServiceTest {
 //    @Test
 //    @DisplayName("모래시계 시작 test")
 //    void startHourglass() {
-//        Mockito.sp
-//        User user = User.of("shane@naver.com","123","h");
-//        UserDetailsImpl testUserDetailsImpl =  new UserDetailsImpl(user,user.getName());
-//        when(userHourglassRepository.findUserHourglassNotEndByUserId())
+//        User user = Mockito.spy(User.of("shane@naver.com","12345678","h1"));
+//        when(user.getId())
+//                .thenReturn(any());
+//        when(userHourglassRepository.findUserHourglassNotEndByUserId(any()))
+//                .thenReturn(Optional.empty());
+//        HourglassStartRequest request = new HourglassStartRequest();
+//        request.setTimeStart("2023-10-17T08:45:00.000Z");
+//        request.setTimeGoal(3600);
+//        UserCategory userCategory = UserCategory.builder()
+//                .user(user).category(new Category(DefaultCategory.OTHERS.getName())).build();
+//        when(userCategoryRepository.findByUserAndCategoryName(user.getId(), DefaultCategory.OTHERS.getName()))
+//                .thenReturn(Optional.of(userCategory));
 //
+//        Task task = Task.defaultOf(userCategory);
+//
+//
+//        ResponseEntity<ApiResponse<HourglassResponse>> response = hourglassService.startHourglass(request,user);
+//
+//        assertThat(response.getStatusCode().value()).isEqualTo(200);
 //    }
 
 //    @Test
@@ -64,30 +86,38 @@ class HourglassServiceTest {
 //        HourglassEndRequest request = new HourglassEndRequest();
 //        request.setTimeEnd("2023-10-17T09:45:00.000Z");
 //        request.setHId(1L);
-//        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any()))
+//
+//        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any(),any()))
 //                .thenReturn(1);
 //        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
+//        User user = Mockito.mock(User.class);
+//        when(user.getId())
+//                .thenReturn(1L);
+//        System.out.println(user.getId()+"!!!!!!!!!!!!!!!!!!!!!!!!!");
 //
-//        ResponseEntity<ApiResponse<HourglassResponse>> response = hourglassService.endHourglass(request);
+//        ResponseEntity<ApiResponse<HourglassSummaryResponse>> response = hourglassService.endHourglass(request,user);
 //
-//        assertThat(response.getBody().getData()).isEqualTo(responseExpected);
+////        assertThat(response.getBody().getData()).isEqualTo(responseExpected);
 //    }
 
-//    @Test
-//    @DisplayName("동작하는 모래시계가 없을 경우")
-//    void testEndHourglassAbnormal(){
-//        HourglassEndRequest request = new HourglassEndRequest();
-//        request.setTimeEnd("2023-10-17T09:45:00.000Z");
-//        request.setHId(1L);
-//        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any()))
-//                .thenReturn(0);
-//        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
-//
-//        Throwable throwable = catchThrowable(()->hourglassService.endHourglass(request));
-//
-//        assertThat(throwable)
-//                .isInstanceOf(RestApiException.class);
-//    }
+    @Test
+    @DisplayName("동작하는 모래시계가 없을 경우")
+    void testEndHourglassAbnormal(){
+        HourglassEndRequest request = new HourglassEndRequest();
+        request.setTimeEnd("2023-10-17T09:45:00.000Z");
+        request.setHId(1L);
+        when(hourglassRepository.updateToEnd(any(),any(),any(),any(),any(),any()))
+                .thenReturn(0);
+        HourglassResponse responseExpected = HourglassResponse.fromHId(1L);
+        User user = Mockito.mock(User.class);
+        when(user.getId())
+                .thenReturn(1L);
+
+        Throwable throwable = catchThrowable(()->hourglassService.endHourglass(request,user));
+
+        assertThat(throwable)
+                .isInstanceOf(RestApiException.class);
+    }
 
     @Test
     void pauseHourglass() {

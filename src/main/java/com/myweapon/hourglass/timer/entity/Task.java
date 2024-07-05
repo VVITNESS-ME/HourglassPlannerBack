@@ -36,12 +36,17 @@ public class Task {
     @Column(name="is_completed")
     private Boolean isCompleted;
 
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(name="is_default")
+    private Boolean isDefault = false;
+
     @Builder
-    public Task(UserCategory userCategory, String title, LocalDateTime date, Boolean isCompleted) {
+    public Task(UserCategory userCategory, String title, LocalDateTime date, Boolean isCompleted,Boolean isDefault) {
         this.userCategory = userCategory;
         this.title = title;
         this.date = date;
         this.isCompleted = isCompleted;
+        this.isDefault = true;
     }
 
     /*
@@ -52,6 +57,7 @@ public class Task {
                 .userCategory(userCategory)
                 .isCompleted(false)
                 .title(userCategory.getCategory().getName())
+                .isDefault(true)
                 .build();
     }
 }
