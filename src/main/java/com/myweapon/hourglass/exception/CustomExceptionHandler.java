@@ -31,4 +31,14 @@ public class CustomExceptionHandler {
                 .status(error.getCode())
                 .body(ErrorResponse.of(error));
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    protected ResponseEntity<ErrorResponse> handleNotKnownException(Exception e){
+        log.error("not known error");
+        ErrorType error = ErrorType.NOT_KNOWN_ERROR;
+        return ResponseEntity
+                .status(error.getCode())
+                .body(ErrorResponse.of(error));
+    }
 }

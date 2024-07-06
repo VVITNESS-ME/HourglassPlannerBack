@@ -1,8 +1,6 @@
 package com.myweapon.hourglass.timer.entity;
 
-import com.myweapon.hourglass.RestApiException;
-import com.myweapon.hourglass.common.TimeUtils;
-import com.myweapon.hourglass.security.enumset.ErrorType;
+import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
 import jakarta.persistence.*;
@@ -11,11 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @NoArgsConstructor

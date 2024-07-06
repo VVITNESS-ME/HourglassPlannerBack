@@ -1,5 +1,7 @@
 package com.myweapon.hourglass.common;
 
+import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,8 +16,13 @@ public class TimeUtils {
     }
     public static LocalDateTime formatString(String timeString,int hours){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_FORMAT);
-        String pureFormat = timeString.replace('T',' ').substring(0,timeString.length()-5);
-        LocalDateTime standard_time =  LocalDateTime.parse(pureFormat,formatter);
+        LocalDateTime standard_time;
+        try{
+            String pureFormat = timeString.replace('T',' ').substring(0,timeString.length()-5);
+            standard_time =  LocalDateTime.parse(pureFormat,formatter);
+        }catch (Exception e){
+            throw new RestApiException(ErrorType.INVALID_REQUEST);
+        }
         return standard_time.plusHours(hours);
     }
 

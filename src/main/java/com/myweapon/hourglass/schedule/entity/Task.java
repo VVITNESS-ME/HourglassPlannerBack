@@ -1,19 +1,15 @@
-package com.myweapon.hourglass.timer.entity;
+package com.myweapon.hourglass.schedule.entity;
 
-import com.myweapon.hourglass.security.UserDetailsImpl;
-import com.myweapon.hourglass.security.entity.User;
+import com.myweapon.hourglass.schedule.dto.TodoPostRequest;
+import com.myweapon.hourglass.timer.entity.UserCategory;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.NumericBooleanConverter;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -38,7 +34,7 @@ public class Task {
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(name="is_default")
-    private Boolean isDefault = false;
+    private Boolean isDefault;
 
     @Builder
     public Task(UserCategory userCategory, String title, LocalDateTime date, Boolean isCompleted,Boolean isDefault) {
@@ -46,7 +42,7 @@ public class Task {
         this.title = title;
         this.date = date;
         this.isCompleted = isCompleted;
-        this.isDefault = true;
+        this.isDefault = isDefault;
     }
 
     /*
@@ -57,7 +53,18 @@ public class Task {
                 .userCategory(userCategory)
                 .isCompleted(false)
                 .title(userCategory.getCategory().getName())
+                .date(LocalDateTime.now())
                 .isDefault(true)
+                .build();
+    }
+
+    public static Task todoOf(TodoPostRequest request,UserCategory userCategory){
+        return Task.builder()
+                .userCategory(userCategory)
+                .isCompleted(false)
+                .title(request.getTitle())
+                .date(LocalDateTime.now())
+                .isDefault(false)
                 .build();
     }
 }

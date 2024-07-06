@@ -15,7 +15,9 @@ public enum ErrorType {
     HOURGLASS_NOT_EXISTS(400,"Hourglass doesn't exist"),
     HOURGLASS_ALREADY_PAUSE(400,"Hourglass is already paused"),
     HOURGLASS_NOT_PAUSE(400,"Hourglass isn't paused"),
-    USER_CATEGORY_NOT_EXISTS(400,"UserCategory doesn't exist");
+    USER_CATEGORY_NOT_EXISTS(400,"UserCategory doesn't exist"),
+    INVALID_REQUEST(400,"request is invalid"),
+    NOT_KNOWN_ERROR(400,"error isn't known");
 
     private int code;
     private String message;

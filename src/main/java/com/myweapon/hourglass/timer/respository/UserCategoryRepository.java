@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserCategoryRepository extends JpaRepository<UserCategory,Long> {
+public interface    UserCategoryRepository extends JpaRepository<UserCategory,Long> {
 
     @Query("select uc from UserCategory uc where uc.user = :user")
     public List<UserCategory> findAllByUser(@Param("user") User user);

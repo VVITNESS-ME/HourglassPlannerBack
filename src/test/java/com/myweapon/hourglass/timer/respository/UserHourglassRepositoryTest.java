@@ -1,6 +1,7 @@
 package com.myweapon.hourglass.timer.respository;
 
 import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.repository.UserRepository;
 import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
@@ -91,12 +92,9 @@ class UserHourglassRepositoryTest {
         for(StudySummeryWithCategory summery : totalSummery){
             UserCategory userCategory = em.find(UserCategory.class,summery.getUserCategoryId());
             Category category = em.find(Category.class,userCategory.getId());
-            category = Category.builder().name("zzz").build();
 
             resultSummary.add(StudySummeryWithCategoryName.of(summery,category));
         }
-
-        System.out.println(resultSummary);
 
         assertThat(resultSummary.size())
                 .isEqualTo(5);

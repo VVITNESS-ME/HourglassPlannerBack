@@ -3,7 +3,10 @@ package com.myweapon.hourglass;
 import com.myweapon.hourglass.common.TimeUtils;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 public class StudyTest {
@@ -20,6 +23,18 @@ public class StudyTest {
         System.out.println(answer);
         LocalDateTime localDateTime = LocalDateTime.parse(answer,formatter);
         System.out.println(localDateTime);
+    }
+
+    @Test
+    public void durationTest(){
+        LocalDate a = LocalDate.now();
+        LocalDate b = a.plusDays(100);
+        System.out.println(a.toString());
+
+//        Duration d = Duration.between(a,b);
+        Period d = Period.between(a,b);
+
+        System.out.println(d.getDays());
     }
 
     @Test

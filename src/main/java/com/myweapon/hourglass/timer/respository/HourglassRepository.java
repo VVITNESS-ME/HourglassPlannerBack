@@ -1,8 +1,7 @@
 package com.myweapon.hourglass.timer.respository;
 
-import com.myweapon.hourglass.timer.entity.Category;
 import com.myweapon.hourglass.timer.entity.Hourglass;
-import com.myweapon.hourglass.timer.entity.Task;
+import com.myweapon.hourglass.schedule.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

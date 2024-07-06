@@ -1,23 +1,13 @@
 package com.myweapon.hourglass.timer.service;
 
 import com.myweapon.hourglass.RestApiException;
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.security.UserDetailsImpl;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.HourglassResponse;
-import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
-import com.myweapon.hourglass.timer.dto.HourglassSummaryResponse;
-import com.myweapon.hourglass.timer.entity.Category;
-import com.myweapon.hourglass.timer.entity.Task;
-import com.myweapon.hourglass.timer.entity.UserCategory;
-import com.myweapon.hourglass.timer.enumset.DefaultCategory;
 import com.myweapon.hourglass.timer.respository.HourglassRepository;
-import com.myweapon.hourglass.timer.respository.TaskRepository;
+import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.timer.respository.UserCategoryRepository;
 import com.myweapon.hourglass.timer.respository.UserHourglassRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,16 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.http.ResponseEntity;
-
-import java.lang.reflect.Member;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

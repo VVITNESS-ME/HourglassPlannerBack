@@ -3,6 +3,8 @@ package com.myweapon.hourglass.timer.service;
 import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.schedule.entity.Task;
+import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.timer.dto.*;
@@ -44,7 +46,7 @@ public class HourglassService {
                     return new RestApiException(ErrorType.USER_CATEGORY_NOT_EXISTS);
                 });
 
-        Task task = taskRepository.findDefaultTaskByCategoryName(DefaultCategory.OTHERS.getName())
+        Task task = taskRepository.findDefaultTaskByCategoryName(DefaultCategory.OTHERS.getName(),user)
                 .orElseThrow();
 
         Hourglass hourglass = Hourglass.toStartHourglass(request);
@@ -62,7 +64,7 @@ public class HourglassService {
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
 
-        Task task = taskRepository.findDefaultTaskByCategoryName(request.getCategoryName())
+        Task task = taskRepository.findDefaultTaskByCategoryName(request.getCategoryName(),user)
                 .orElseThrow(()->new RestApiException((ErrorType.USER_CATEGORY_NOT_EXISTS)));
 
         hourglass.end(task,request);
@@ -106,18 +108,15 @@ public class HourglassService {
 
         List<StudySummeryWithCategory> totalSummery
                 = userHourglassRepository.studySummeryByDay(user.getId(),todayStartEnd.getStart(),todayStartEnd.getEnd());
-        System.out.println(todayStartEnd.getStart());
-        System.out.println(todayStartEnd.getEnd());
-        System.out.println(totalSummery.size());
 
         List<StudySummeryWithCategoryName> resultSummary = new ArrayList<>();
         for(StudySummeryWithCategory summery : totalSummery){
-            System.out.println("!");
             UserCategory userCategory = userCategoryRepository.findById(summery.getUserCategoryId())
                     .orElseThrow(()->new RestApiException(ErrorType.USER_CATEGORY_NOT_EXISTS));
             Category category = userCategory.getCategory();
             resultSummary.add(StudySummeryWithCategoryName.of(summery,category));
         }
+
         return resultSummary;
     }
 }
