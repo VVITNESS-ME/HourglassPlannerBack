@@ -1,40 +1,41 @@
 package com.myweapon.hourglass.config;
 
-import com.myweapon.hourglass.webchat.util.SignalingSocketHandler;
+import com.myweapon.hourglass.webchat.util.SignalSocketHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Configuration
-@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-
-//    @Value("${client.server.domain}")
-//    private String clientServerDomain;
+    // 클라이언트 서버 도메인 주소
+    @Value("${client.server.domain1}")
+    private String clientServerDomain1;
+    @Value("${client.server.domain2}")
+    private String clientServerDomain2;
+    @Value("${client.server.domain3}")
+    private String clientServerDomain3;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(signalSocketHandler(), "/signal")
-                .setAllowedOrigins("*"); // 필요한 경우 특정 도메인을 지정
+        registry.addHandler(signalHandler(), "/signal")
+                .setAllowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3)
+                .withSockJS();
     }
 
-    // WebSocket 메시지를 처리하는 WebSocket 핸들러 빈을 생성
     @Bean
-    public WebSocketHandler signalSocketHandler() {
-        return new SignalingSocketHandler();
+    public WebSocketHandler signalHandler() {
+        return new SignalSocketHandler();
     }
 
-    // WebSocket 설정을 위한 ServletServerContainerFactoryBean 빈을 생성
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxTextMessageBufferSize(8192); // 텍스트 메시지 버퍼 크기 설정
-        container.setMaxBinaryMessageBufferSize(8192); // 바이너리 메시지 버퍼 크기 설정
+        container.setMaxTextMessageBufferSize(8192);
+        container.setMaxBinaryMessageBufferSize(8192);
         return container;
     }
 }

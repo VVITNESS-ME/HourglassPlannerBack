@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class SignalingSocketHandler extends TextWebSocketHandler {
-    private static final Logger logger = LoggerFactory.getLogger(SignalingSocketHandler.class);
+public class SignalSocketHandler extends TextWebSocketHandler {
+    private static final Logger logger = LoggerFactory.getLogger(SignalSocketHandler.class);
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
 
     @Override

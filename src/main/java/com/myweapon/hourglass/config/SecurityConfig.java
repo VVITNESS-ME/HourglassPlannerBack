@@ -15,35 +15,38 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    @Value("${client.server.domain}")
-//    private String clientServerDomain;
+    @Value("${client.server.domain1}")
+    private String clientServerDomain1;
+
+    @Value("${client.server.domain2}")
+    private String clientServerDomain2;
+
+    @Value("${client.server.domain3}")
+    private String clientServerDomain3;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        // CORS 설정 추가
         return http.csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
                 .sessionManagement(sessionManagementConfig ->
                         sessionManagementConfig
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // JWT 필터 제거
-                //.addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        // 모든 요청을 허용
                         .anyRequest().permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .build();
     }
 
-    // CORS 설정을 위한 Bean 생성
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("**"); // 필요한 경우 특정 도메인으로 제한
+        config.addAllowedOrigin(clientServerDomain1);
+        config.addAllowedOrigin(clientServerDomain2);
+        config.addAllowedOrigin(clientServerDomain3);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
