@@ -2,10 +2,8 @@ package com.myweapon.hourglass.schedule.service;
 
 import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.schedule.dto.Todo;
-import com.myweapon.hourglass.schedule.dto.TodoGetResponse;
-import com.myweapon.hourglass.schedule.dto.TodoPostRequest;
-import com.myweapon.hourglass.schedule.dto.TodoPostResponse;
+import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.schedule.dto.*;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.security.entity.User;
@@ -16,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class TaskService {
     private final TaskRepository taskRepository;
@@ -35,10 +35,17 @@ public class TaskService {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    public ResponseEntity<ApiResponse<TodoGetResponse>> getTodo(User user){
-        List<Todo> schedules = taskRepository.findTodoTasks(user);
+    public ResponseEntity<ApiResponse<TodoGetResponse>> getTodo(User user,Boolean isCompleted){
+        List<Todo> schedules = taskRepository.findTodoTasks(user,isCompleted);
         TodoGetResponse response = TodoGetResponse.of(schedules);
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    public ResponseEntity<ApiResponse<ApiSuccess>> completeTodo(Long taskId){
+        if(taskRepository.completeTask(taskId)==0){
+            throw new RestApiException(ErrorType.TASK_NOT_EXISTS);
+        }
+        return ResponseEntity.ok(ApiResponse.success(ApiSuccess.body()));
     }
 }

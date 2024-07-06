@@ -2,6 +2,7 @@ package com.myweapon.hourglass.schedule.controller;
 
 
 import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.common.ApiSuccess;
 import com.myweapon.hourglass.common.binder.LocalDateTimeEditor;
 import com.myweapon.hourglass.schedule.dto.*;
 import com.myweapon.hourglass.schedule.service.CalendarService;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 @RequestMapping("/schedule")
 @Slf4j
 public class ScheduleController {
+    private static final Boolean COMPLETED = true;
+    private static final Boolean NOT_COMPLETED = false;
     private final CalendarService calendarService;
     private final TaskService taskService;
     @InitBinder
@@ -42,7 +45,7 @@ public class ScheduleController {
 
     @GetMapping("/todo")
     public ResponseEntity<ApiResponse<TodoGetResponse>> getTodo(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return taskService.getTodo(userDetails.getUser());
+        return taskService.getTodo(userDetails.getUser(),NOT_COMPLETED);
     }
 
 
@@ -52,5 +55,13 @@ public class ScheduleController {
         return taskService.addTodo(request,userDetails.getUser());
     }
 
+    @GetMapping("/todo/completion")
+    public ResponseEntity<ApiResponse<TodoGetResponse>> getTodoComplete(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return taskService.getTodo(userDetails.getUser(),COMPLETED);
+    }
 
+    @PostMapping("/todo/completion")
+    public ResponseEntity<ApiResponse<ApiSuccess>> completeTodo(@RequestParam(name = "taskId") Long taskId){
+        return taskService.completeTodo(taskId);
+    }
 }
