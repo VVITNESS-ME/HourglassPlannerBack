@@ -21,9 +21,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(signalHandler(), "/signal")
-                .setAllowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3)
-                .withSockJS();
+        registry.addHandler(signalHandler())
+                .setAllowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3);
     }
 
     @Bean

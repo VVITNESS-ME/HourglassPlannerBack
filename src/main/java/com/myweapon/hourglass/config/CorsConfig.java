@@ -18,10 +18,8 @@ public class CorsConfig implements WebMvcConfigurer {
     // 전역 CORS 설정
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(clientServerDomain1) // 필요한 도메인 추가
-                .allowedOrigins(clientServerDomain2)
-                .allowedOrigins(clientServerDomain3)
+        registry.addMapping("/**")
+                .allowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3) // 필요한 도메인 추가
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);
