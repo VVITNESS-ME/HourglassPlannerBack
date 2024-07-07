@@ -1,5 +1,6 @@
 package com.myweapon.hourglass.timer.entity;
 
+import com.myweapon.hourglass.category.entity.Category;
 import com.myweapon.hourglass.security.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;

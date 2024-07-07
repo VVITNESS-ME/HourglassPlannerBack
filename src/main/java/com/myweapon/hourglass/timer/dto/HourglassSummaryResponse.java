@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HourglassSummaryResponse {
-    private Long hid;
+    private Long hId;
     private List<StudySummeryWithCategoryName> todaySummery;
 
     public static HourglassSummaryResponse of(Long hid,List<StudySummeryWithCategoryName> todaySummery){
         return HourglassSummaryResponse.builder()
-                .hid(hid)
+                .hId(hid)
                 .todaySummery(todaySummery)
                 .build();
     }
