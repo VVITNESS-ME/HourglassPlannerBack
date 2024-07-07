@@ -1,6 +1,10 @@
 package com.myweapon.hourglass.timer.service;
 
 import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.category.entity.Category;
+import com.myweapon.hourglass.category.entity.UserCategory;
+import com.myweapon.hourglass.category.repository.UserCategoryRepository;
+import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.common.TimeUtils;
 import com.myweapon.hourglass.schedule.entity.Task;

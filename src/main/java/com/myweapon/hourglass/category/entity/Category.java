@@ -1,10 +1,7 @@
-package com.myweapon.hourglass.timer.entity;
+package com.myweapon.hourglass.category.entity;
 
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Builder
@@ -25,6 +23,12 @@ public class Category {
     public static Category of(DefaultCategory defaultCategory){
         return Category.builder()
                 .name(defaultCategory.getName())
+                .build();
+    }
+
+    public static Category of(String categoryName){
+        return Category.builder()
+                .name(categoryName)
                 .build();
     }
 }

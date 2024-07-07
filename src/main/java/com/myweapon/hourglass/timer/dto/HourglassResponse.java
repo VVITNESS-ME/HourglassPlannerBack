@@ -8,17 +8,17 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HourglassResponse {
-    private Long hid;
+    private Long hId;
 
     public static HourglassResponse fromHourGlass(Hourglass hourglass){
         return HourglassResponse.builder()
-                .hid(hourglass.getId())
+                .hId(hourglass.getId())
                 .build();
     }
 
     public static HourglassResponse fromHId(Long hid){
         return HourglassResponse.builder()
-                .hid(hid)
+                .hId(hid)
                 .build();
     }
 }

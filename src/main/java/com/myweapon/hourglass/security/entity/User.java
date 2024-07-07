@@ -1,11 +1,7 @@
 package com.myweapon.hourglass.security.entity;
 
-import com.myweapon.hourglass.timer.entity.UserCategory;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor

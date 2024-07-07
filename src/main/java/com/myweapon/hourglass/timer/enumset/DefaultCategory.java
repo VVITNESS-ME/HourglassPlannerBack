@@ -2,7 +2,9 @@ package com.myweapon.hourglass.timer.enumset;
 
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public enum DefaultCategory {
@@ -20,7 +22,16 @@ public enum DefaultCategory {
         this.id = id;
         this.color = color;
     }
-
+    public static List<Long> getAllId(){
+        return Arrays.stream(DefaultCategory.values())
+                .map(DefaultCategory::getId)
+                .toList();
+    }
+    public static List<String> getAllColor(){
+        return Arrays.stream(DefaultCategory.values())
+                .map(DefaultCategory::getColor)
+                .toList();
+    }
     public void setId(Long id){
         this.id = id;
     }

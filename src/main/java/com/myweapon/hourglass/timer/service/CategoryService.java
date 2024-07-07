@@ -1,15 +1,14 @@
 package com.myweapon.hourglass.timer.service;
 
-import com.myweapon.hourglass.timer.entity.Category;
+import com.myweapon.hourglass.category.entity.Category;
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
-import com.myweapon.hourglass.timer.respository.CategoryRepository;
+import com.myweapon.hourglass.category.repository.CategoryRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

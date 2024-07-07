@@ -1,14 +1,11 @@
 package com.myweapon.hourglass.category.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-public class UserCategoryWithName {
-    private Long userCategoryId;
+@NoArgsConstructor
+public class UserCategoryPostRequest {
     private String categoryName;
     private String color;
 }

@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.schedule.entity;
 
 import com.myweapon.hourglass.schedule.dto.TodoPostRequest;
-import com.myweapon.hourglass.timer.entity.UserCategory;
+import com.myweapon.hourglass.category.entity.UserCategory;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

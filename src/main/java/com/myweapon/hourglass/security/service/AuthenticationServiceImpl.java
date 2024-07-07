@@ -9,18 +9,20 @@ import com.myweapon.hourglass.security.dto.JwtAuthenticationResponse;
 import com.myweapon.hourglass.security.dto.SignInRequest;
 import com.myweapon.hourglass.security.dto.SignUpRequest;
 import com.myweapon.hourglass.security.jwt.JwtService;
-import com.myweapon.hourglass.timer.entity.Category;
+import com.myweapon.hourglass.category.entity.Category;
 import com.myweapon.hourglass.schedule.entity.Task;
-import com.myweapon.hourglass.timer.entity.UserCategory;
+import com.myweapon.hourglass.category.entity.UserCategory;
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
-import com.myweapon.hourglass.timer.respository.CategoryRepository;
+import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
-import com.myweapon.hourglass.timer.respository.UserCategoryRepository;
+import com.myweapon.hourglass.category.repository.UserCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final TaskRepository taskRepository;
 
     @Override
+    @Transactional
     public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signup(SignUpRequest request) {
         Optional<User> foundByEmail = userRepository.findUserByEmail(request.getEmail());
         if(foundByEmail.isPresent()){
@@ -71,26 +74,20 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     private void initUser(User user){
-        addDefaultCategories(user);
-        addDefaultTasks(user);
+        List<UserCategory> userCategories = addDefaultCategories(user);
+        addDefaultTasks(user,userCategories);
     }
 
-    private void addDefaultCategories(User user){
-        for(DefaultCategory defaultCategory:DefaultCategory.values()){
-            Optional<Category> category = categoryRepository.findById(defaultCategory.getId());
+    private List<UserCategory> addDefaultCategories(User user){
+        List<Category> defaultCategories = categoryRepository.findCategoriesById(DefaultCategory.getAllId());
+        List<String> colors = DefaultCategory.getAllColor();
+        List<UserCategory> userCategories = UserCategory.listOf(user,defaultCategories,colors);
 
-            UserCategory userCategory = UserCategory.builder()
-                    .category(category.orElseThrow())
-                    .user(user)
-                    .color(defaultCategory.getColor())
-                    .build();
-
-            userCategoryRepository.save(userCategory);
-        }
+        userCategoryRepository.saveAll(userCategories);
+        return userCategories;
     }
 
-    private void addDefaultTasks(User user){
-        List<UserCategory> userCategories = userCategoryRepository.findAllByUser(user);
+    private void addDefaultTasks(User user,List<UserCategory> userCategories){
         for(UserCategory userCategory : userCategories){
             taskRepository.save(Task.defaultOf(userCategory));
         }

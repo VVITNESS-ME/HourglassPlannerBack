@@ -6,7 +6,7 @@ import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.HourglassResponse;
 import com.myweapon.hourglass.timer.respository.HourglassRepository;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
-import com.myweapon.hourglass.timer.respository.UserCategoryRepository;
+import com.myweapon.hourglass.category.repository.UserCategoryRepository;
 import com.myweapon.hourglass.timer.respository.UserHourglassRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
