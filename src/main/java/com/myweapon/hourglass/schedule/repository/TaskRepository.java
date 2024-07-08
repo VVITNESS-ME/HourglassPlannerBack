@@ -21,6 +21,10 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
             "where t.isDefault = true and c.name = :categoryName and uc.user = :user")
     public Optional<Task> findDefaultTaskByCategoryName(@Param("categoryName")String categoryName,@Param("user") User user);
 
+    @Query("select t from Task t " +
+            "where t.id = :taskId and t.isDefault = false and t.isCompleted = false")
+    public Optional<Task> findTodoTaskNotCompletedByTaskId(@Param("taskId")Long taskId);
+
     @Query("select new com.myweapon.hourglass.schedule.dto.Todo(t.id,t.title,c.name,uc.color) from Task t " +
             "inner join UserCategory uc " +
             "on t.userCategory = uc " +

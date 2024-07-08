@@ -10,6 +10,8 @@ import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.category.repository.UserCategoryRepository;
 import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.schedule.entity.Task;
+import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import static com.myweapon.hourglass.common.repository.utils.UpdateUtils.isNotUp
 public class UserCategoryService {
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final TaskRepository taskRepository;
     public ResponseEntity<ApiResponse<UserCategoryGetResponse>> getUserCategory(User user){
         List<UserCategoryWithName> userCategoriesWithName = userCategoryRepository.getUserCategoriesWithName(user);
 
@@ -46,6 +49,9 @@ public class UserCategoryService {
         UserCategory userCategory = UserCategory.of(user,category,request.getColor());
         userCategoryRepository.save(userCategory);
 
+        Task task = Task.defaultOf(userCategory);
+        taskRepository.save(task);
+
         return ResponseEntity.ok(ApiSuccess.body());
     }
 
@@ -56,5 +62,4 @@ public class UserCategoryService {
 
         return ResponseEntity.ok(ApiSuccess.body());
     }
-
 }

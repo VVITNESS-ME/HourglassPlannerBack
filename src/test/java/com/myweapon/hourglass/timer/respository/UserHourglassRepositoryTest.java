@@ -157,7 +157,7 @@ class UserHourglassRepositoryTest {
 
                 Hourglass hourglass = Hourglass.toStartHourglass(hourglassStartRequest);
                 hourglass.setTask(task);
-                hourglass.end(task,createHourglassEndRequest(hourglass.getId(),addHour(STUDY_TIME,curTime)));
+                hourglass.endAsDefault(task,createHourglassEndRequest(hourglass.getId(),addHour(STUDY_TIME,curTime)));
                 em.persist(hourglass);
                 curTime = addHour(STUDY_INTERVAL,curTime);
             }
