@@ -24,7 +24,6 @@ public class HourglassController {
     @PostMapping("/end")
     public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2");
         return hourglassService.endHourglass(hourglassEndRequest,userDetails.getUser());
     }
     @PostMapping(value = "/end/{taskId}")

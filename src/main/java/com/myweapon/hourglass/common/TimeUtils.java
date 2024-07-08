@@ -5,6 +5,7 @@ import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -26,16 +27,19 @@ public class TimeUtils {
         return standard_time.plusHours(hours);
     }
 
-    public static TodayStartEnd todayStartEnd(){
-        LocalDateTime start = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
-        LocalDateTime end = start.plusDays(1);
-        return new TodayStartEnd(start,end);
+
+
+    public static DayStartEnd dayStartEnd(LocalDateTime dateTime){
+        LocalDate start = dateTime.truncatedTo(ChronoUnit.DAYS).toLocalDate();
+        LocalDate end = start.plusDays(1);
+        return new DayStartEnd(start,end);
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class TodayStartEnd{
-        private LocalDateTime start;
-        private LocalDateTime end;
+    public static DayStartEnd dayStartEnd(LocalDate date){
+        return new DayStartEnd(date,date.plusDays(1));
+    }
+
+    public static DayStartEnd todayStartEnd(){
+        return dayStartEnd(LocalDateTime.now());
     }
 }

@@ -136,8 +136,7 @@ class UserHourglassRepositoryTest {
     private List<UserCategory> saveUserCategories(List<Category> categories,User user){
         List<UserCategory> userCategories = new ArrayList<>();
         for(Category category: categories){
-            UserCategory userCategory = UserCategory.builder()
-                    .user(user).category(category).color(DefaultCategory.OTHERS.getColor()).build();
+            UserCategory userCategory = UserCategory.of(user,category,DefaultCategory.OTHERS.getColor());
             em.persist(userCategory);
             userCategories.add(userCategory);
         }

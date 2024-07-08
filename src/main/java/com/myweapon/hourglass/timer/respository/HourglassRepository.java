@@ -16,4 +16,9 @@ public interface HourglassRepository extends JpaRepository<Hourglass,Long> {
     @Query("update Hourglass h set h.end = :end, h.burstTime = :burst, h.rating =:rating, h.content =:content, h.task =:task where h.id = :hId")
     public Integer updateToEnd(@Param("hId") Long hId, @Param("end") LocalDateTime end
             , @Param("burst") Integer burst, @Param("rating") Float rating, @Param("content") String content, @Param("task") Task task);
+
+    @Transactional
+    @Modifying
+    @Query("update Hourglass h set h.content = :content where h.id = :hId")
+    public Integer updateContent(@Param("hId") Long hId,@Param("content")String content);
 }

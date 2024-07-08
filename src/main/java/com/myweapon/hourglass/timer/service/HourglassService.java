@@ -6,6 +6,7 @@ import com.myweapon.hourglass.category.entity.UserCategory;
 import com.myweapon.hourglass.category.repository.UserCategoryRepository;
 import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.common.DayStartEnd;
 import com.myweapon.hourglass.common.TimeUtils;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
@@ -22,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,13 +63,14 @@ public class HourglassService {
     public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(HourglassEndRequest request ,User user){
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
-
+        log.info("1111111111111111111111111111111111111111111111111");
         Task task = taskRepository.findDefaultTaskByCategoryName(request.getCategoryName(),user)
                 .orElseThrow(()->new RestApiException((ErrorType.USER_CATEGORY_NOT_EXISTS)));
 
+        log.info("222222222222222222222222222222222222222222222222222");
         hourglass.endAsDefault(task,request);
         em.flush();
-
+        log.info("1111111111111111111111111111111111111111111111111");
         List<StudySummeryWithCategoryName> resultSummary = getResultSummery(user);
 
         return ResponseEntity.ok(ApiResponse.success(HourglassSummaryResponse.of(hourglass.getId(), resultSummary)));
@@ -123,10 +127,10 @@ public class HourglassService {
     }
 
     private List<StudySummeryWithCategoryName> getResultSummery(User user){
-        TimeUtils.TodayStartEnd todayStartEnd = TimeUtils.todayStartEnd();
-
+        LocalDateTime start = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime end = start.plusDays(1);
         List<StudySummeryWithCategory> userCategorySummery
-                = userHourglassRepository.studySummeryByDay(user.getId(),todayStartEnd.getStart(),todayStartEnd.getEnd());
+                = userHourglassRepository.studySummeryByDay(user.getId(), start, end);
         log.error(Integer.toString(userCategorySummery.size()));
 
         List<StudySummeryWithCategoryName> resultSummary = new ArrayList<>();
