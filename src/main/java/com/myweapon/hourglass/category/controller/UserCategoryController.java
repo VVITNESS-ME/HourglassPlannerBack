@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/userCategory")
+@RequestMapping("/user-category")
 public class UserCategoryController {
     private final UserCategoryService userCategoryService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<ApiResponse<UserCategoryGetResponse>> getUserCategory(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return userCategoryService.getUserCategory(userDetails.getUser());
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ApiSuccess> addUserCategory(@RequestBody UserCategoryPostRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userCategoryService.addUserCategory(request,userDetails.getUser());
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<ApiSuccess> deleteUserCategory(@RequestParam("userCategoryId")Long userCategoryId){
         return userCategoryService.deleteUserCategory(userCategoryId);
     }
