@@ -13,9 +13,9 @@ spring:
     active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${RDS_URL}:3306/${RDS_NAME}?serverTimezone=Asia/Seoul
-    username: ${RDS_USER}
-    password: ${RDS_PW}
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
   jpa:
     hibernate:
       ddl-auto: create
