@@ -6,13 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
 public class DayOfGarden {
-    private LocalDateTime date;
+    private LocalDate date;
     private Long totalBurst;
+    public DayOfGarden(LocalDateTime dateString,Long totalBurst){
+        this.date = dateString.toLocalDate();
+        this.totalBurst = totalBurst;
+    }
 }

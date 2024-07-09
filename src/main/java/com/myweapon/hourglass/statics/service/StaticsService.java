@@ -18,13 +18,7 @@ import java.util.List;
 public class StaticsService {
     private final StudyStaticsViewRepository studyStaticsViewRepository;
     public ResponseEntity<ApiResponse<GardenGetResponse>> getGardenOfInterval(LocalDateTime start, LocalDateTime end, User user){
-        System.out.println(user.getId());
-        System.out.println(start);
-        System.out.println(end);
         List<DayOfGarden> entries = studyStaticsViewRepository.findGardenOfInterval(start,end,user.getId());
-        for (DayOfGarden d : entries){
-            System.out.println(d);
-        }
         GardenGetResponse response = GardenGetResponse.of(entries);
         return ResponseEntity.ok(ApiResponse.success(response));
     }

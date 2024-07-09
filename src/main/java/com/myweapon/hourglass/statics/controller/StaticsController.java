@@ -27,9 +27,7 @@ public class StaticsController {
     //@DateTimeFormat(pattern = "yyyy-MM-dd")
     @GetMapping("/garden")
     public ResponseEntity<ApiResponse<GardenGetResponse>> getGardenOfInterval
-            (@RequestParam("start") String start
-                    , @RequestParam("end") String end
-                    , @AuthenticationPrincipal UserDetailsImpl userDetails){
+            (@RequestParam("start") String start, @RequestParam("end") String end, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return staticsService.getGardenOfInterval(DateTimeFrame.FROM_DAY.toLocalDateTime(start)
                 ,DateTimeFrame.FROM_DAY.toLocalDateTime(end),
                 userDetails.getUser());

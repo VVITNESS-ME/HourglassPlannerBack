@@ -1,22 +1,27 @@
 package com.myweapon.hourglass.schedule.dto;
 
+import com.myweapon.hourglass.schedule.entity.Calender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Builder
 public class CalendarPostResponse {
-    private Long cId;
+    private List<Long> cIds;
 
-    public CalendarPostResponse(Long cId){
-        this.cId = cId;
+    public CalendarPostResponse(List<Long> cIds){
+        this.cIds = cIds;
     }
 
-    public static CalendarPostResponse of(Long cId){
+    public static CalendarPostResponse of(List<Calender> calendarsSaved){
+        List<Long> cIds = calendarsSaved.stream().map(Calender::getId).toList();
+
         return CalendarPostResponse.builder()
-                .cId(cId)
+                .cIds(cIds)
                 .build();
     }
 }
