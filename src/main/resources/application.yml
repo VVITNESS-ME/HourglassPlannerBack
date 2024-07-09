@@ -17,7 +17,7 @@ spring:
     defer-datasource-initialization: true
     database: mysql
 server:
-  port : 8082
+  port : 8080
 
 logging:
   level:
