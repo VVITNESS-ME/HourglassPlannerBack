@@ -9,6 +9,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
+import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 @Configuration
 @EnableWebSocket // WebSocket 활성화
@@ -25,7 +26,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(signalHandler(), "/signal")
 //                .setAllowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3);
-                .setAllowedOrigins("*");
+                .setAllowedOrigins("*")
+                .addInterceptors(new HttpSessionHandshakeInterceptor());
     }
 
     @Bean
