@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.timer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.common.time.TimeUtils;
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

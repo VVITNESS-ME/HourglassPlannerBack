@@ -2,7 +2,7 @@ package com.myweapon.hourglass.timer.respository;
 
 import com.myweapon.hourglass.category.entity.Category;
 import com.myweapon.hourglass.category.entity.UserCategory;
-import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.common.time.TimeUtils;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.repository.UserRepository;

@@ -10,19 +10,39 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
 @Getter
-public enum DateTimeFormat {
-    FROM_TIME("yyyy-MM-dd HH:mm:ss",DateTimeFormat::toLocalDateTimeFromTime,DateTimeFormat::toLocalDateFromTime),
-    FROM_DAY("yyyy-MM-dd",LocalDateTime::parse,LocalDate::parse),
-    FROM_MONTH("yyyy-MM",LocalDateTime::parse,LocalDate::parse),
-    FROM_YEAR("yyyy",LocalDateTime::parse,LocalDate::parse);
+public enum DateTimeFrame {
+    FROM_TIME(DateTimeFrameConstants.FROM_TIME, DateTimeFrame::toLocalDateTimeFromTime, DateTimeFrame::toLocalDateFromTime),
+    FROM_DAY(DateTimeFrameConstants.FROM_DAY, DateTimeFrame::parseLocalDateTimeFromDate, LocalDate::parse),
+    FROM_MONTH(DateTimeFrameConstants.FROM_MONTH, LocalDateTime::parse, LocalDate::parse),
+    FROM_YEAR(DateTimeFrameConstants.FROM_YEAR, LocalDateTime::parse, LocalDate::parse);
+
     private final static Integer TIME_KOREA_FROM_UTC = 9;
+
     private final String format;
     private final Function<String, LocalDateTime> toLocalDateTime;
     private final Function<String, LocalDate> toLocalDate;
-    DateTimeFormat(String format,Function<String,LocalDateTime> toLocalDateTime,Function<String,LocalDate> toLocalDate){
+
+    DateTimeFrame(String format, Function<String,LocalDateTime> toLocalDateTime, Function<String,LocalDate> toLocalDate){
         this.format = format;
         this.toLocalDateTime = toLocalDateTime;
         this.toLocalDate = toLocalDate;
+    }
+
+    public String getFormat(){
+        return format;
+    }
+
+    public LocalDateTime toLocalDateTime(String dateTimeString){
+        return toLocalDateTime.apply(dateTimeString);
+    }
+    public LocalDate toLocalDate(String dateTimeString){
+        return toLocalDate.apply(dateTimeString);
+    }
+
+    private static LocalDateTime parseLocalDateTimeFromDate(String dateString){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FROM_DAY.format);
+        LocalDate localDate = LocalDate.parse(dateString,formatter);
+        return localDate.atStartOfDay();
     }
 
     private static LocalDateTime toLocalDateTimeFromTime(String dateTimeString){

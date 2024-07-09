@@ -1,9 +1,8 @@
 package com.myweapon.hourglass;
 
-import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.common.time.TimeUtils;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;

@@ -6,8 +6,6 @@ import com.myweapon.hourglass.category.entity.UserCategory;
 import com.myweapon.hourglass.category.repository.UserCategoryRepository;
 import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.DayStartEnd;
-import com.myweapon.hourglass.common.TimeUtils;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.security.entity.User;
@@ -63,24 +61,19 @@ public class HourglassService {
     public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(HourglassEndRequest request ,User user){
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
-        log.info("1111111111111111111111111111111111111111111111111");
         Task task = taskRepository.findDefaultTaskByCategoryName(request.getCategoryName(),user)
                 .orElseThrow(()->new RestApiException((ErrorType.USER_CATEGORY_NOT_EXISTS)));
 
-        log.info("222222222222222222222222222222222222222222222222222");
         hourglass.endAsDefault(task,request);
         em.flush();
-        log.info("1111111111111111111111111111111111111111111111111");
         List<StudySummeryWithCategoryName> resultSummary = getResultSummery(user);
 
         return ResponseEntity.ok(ApiResponse.success(HourglassSummaryResponse.of(hourglass.getId(), resultSummary)));
     }
 
     public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglassWithTask(Long taskId, HourglassEndWithTaskRequest request ,User user){
-        log.error("taskId : "+request.getHId().toString());
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
-        log.error("taskId : "+taskId.toString());
         Task task = taskRepository.findTodoTaskNotCompletedByTaskId(taskId)
                 .orElseThrow(()->new RestApiException(ErrorType.TASK_NOT_EXISTS));
 
@@ -131,7 +124,6 @@ public class HourglassService {
         LocalDateTime end = start.plusDays(1);
         List<StudySummeryWithCategory> userCategorySummery
                 = userHourglassRepository.studySummeryByDay(user.getId(), start, end);
-        log.error(Integer.toString(userCategorySummery.size()));
 
         List<StudySummeryWithCategoryName> resultSummary = new ArrayList<>();
         for(StudySummeryWithCategory summery : userCategorySummery){
@@ -140,7 +132,6 @@ public class HourglassService {
             Category category = userCategory.getCategory();
             resultSummary.add(StudySummeryWithCategoryName.of(summery,category));
         }
-        log.error(Integer.toString(resultSummary.size()));
 
         return resultSummary;
     }
