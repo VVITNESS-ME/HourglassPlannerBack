@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Configuration
+@EnableWebSocket // WebSocket 활성화
 public class WebSocketConfig implements WebSocketConfigurer {
     // 클라이언트 서버 도메인 주소
     @Value("${client.server.domain1}")
@@ -21,8 +23,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(signalHandler())
-                .setAllowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3);
+        registry.addHandler(signalHandler(), "/signal")
+//                .setAllowedOrigins(clientServerDomain1, clientServerDomain2, clientServerDomain3);
+                .setAllowedOrigins("*");
     }
 
     @Bean

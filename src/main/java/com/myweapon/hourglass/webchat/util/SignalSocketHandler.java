@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.webchat.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -10,51 +10,73 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Component
 public class SignalSocketHandler extends TextWebSocketHandler {
-    Logger logger = LoggerFactory.getLogger(SignalSocketHandler.class);
-
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
     private final Map<String, String> roomSessions = new HashMap<>();
+    private Timer timer;
+
+    // 5초마다 연결된 세션의 수를 전송
+    @PostConstruct
+    public void startTimer() {
+        timer = new Timer(true);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                removeClosedSessions();
+                broadcastUserCount();
+            }
+        }, 0, 5000); // 5초마다 실행
+    }
+
+    @PreDestroy
+    public void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // 세션이 연결되면 처리
-        logger.info("Connected: " + session.getId());
         System.out.println("Connection established with session id: " + session.getId());
         sessions.put(session.getId(), session);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        // 메시지를 받으면 처리
         String payload = message.getPayload();
-        logger.info("Received: " + payload);
         System.out.println("Received message: " + message.getPayload() + " from session id: " + session.getId());
-        // 예: { "type": "create_room", "room": "1" }
-        // 예: { "type": "join_room", "room": "1" }
 
-        Map<String, String> msgMap = parseMessage(payload);
-        String type = msgMap.get("type");
-        String room = msgMap.get("room");
+        Map<String, Object> msgMap = parseMessage(payload);
+        String type = (String) msgMap.get("type");
+        String room = (String) msgMap.get("room");
 
-        if ("create_room".equals(type)) {
-            roomSessions.put(session.getId(), room);
-            session.sendMessage(new TextMessage("Room " + room + " created."));
-            logger.info("Room " + room + " created.");
-        } else if ("join_room".equals(type)) {
-            roomSessions.put(session.getId(), room);
-            session.sendMessage(new TextMessage("Joined room " + room));
-            logger.info("Joined room " + room);
-            for (Map.Entry<String, String> entry : roomSessions.entrySet()) {
-                if (room.equals(entry.getValue()) && !entry.getKey().equals(session.getId())) {
-                    WebSocketSession otherSession = sessions.get(entry.getKey());
-                    if (otherSession != null && otherSession.isOpen()) {
-                        otherSession.sendMessage(new TextMessage("New participant joined room " + room));
-                        logger.info("New participant joined room " + room);
-                    }
+        switch (type) {
+            case "join_room":
+                roomSessions.put(session.getId(), room);
+                session.sendMessage(new TextMessage("Joined room " + room));
+                System.out.println("Joined room " + room);
+                break;
+            case "offer":
+            case "answer":
+            case "candidate":
+                relayMessageToOtherPeers(session, room, payload);
+                break;
+        }
+    }
+
+    private void relayMessageToOtherPeers(WebSocketSession senderSession, String room, String message) throws IOException {
+        for (Map.Entry<String, String> entry : roomSessions.entrySet()) {
+            if (room.equals(entry.getValue()) && !entry.getKey().equals(senderSession.getId())) {
+                WebSocketSession otherSession = sessions.get(entry.getKey());
+                if (otherSession != null && otherSession.isOpen()) {
+                    otherSession.sendMessage(new TextMessage(message));
+                    System.out.println("Relayed message to session " + otherSession.getId() + ": " + message);
                 }
             }
         }
@@ -62,25 +84,54 @@ public class SignalSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        logger.error("Transport error: " + exception.getMessage(), exception);
+        System.out.println("Transport error: " + exception.getMessage());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        // 세션이 닫히면 처리
-        logger.info("Disconnected: " + session.getId() + " Status: " + status);
+        System.out.println("Disconnected: " + session.getId() + " Status: " + status);
         sessions.remove(session.getId());
         roomSessions.remove(session.getId());
     }
 
-    private Map<String, String> parseMessage(String message) {
-        // 간단한 메시지 파싱 (JSON 파싱 등)
-        Map<String, String> map = new HashMap<>();
+    private Map<String, Object> parseMessage(String message) {
+        Map<String, Object> map = new HashMap<>();
+        message = message.replace("{", "").replace("}", "").replace("\"", "");
         String[] parts = message.split(",");
         for (String part : parts) {
             String[] keyValue = part.split(":");
-            map.put(keyValue[0].trim(), keyValue[1].trim());
+            if (keyValue.length == 2) {
+                map.put(keyValue[0].trim(), keyValue[1].trim());
+            }
         }
         return map;
+    }
+
+    private void removeClosedSessions() {
+        Iterator<Map.Entry<String, WebSocketSession>> iterator = sessions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, WebSocketSession> entry = iterator.next();
+            if (!entry.getValue().isOpen()) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private void broadcastUserCount() {
+        int userCount = sessions.size();
+        String message = String.format("{\"type\": \"user_count\", \"count\": %d}", userCount);
+
+        for (WebSocketSession session : sessions.values()) {
+            if (session.isOpen()) {
+                try {
+                    session.sendMessage(new TextMessage(message));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(userCount > 0){
+            System.out.println("Broadcasted user count: " + userCount);
+        }
     }
 }

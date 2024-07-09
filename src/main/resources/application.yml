@@ -33,3 +33,8 @@ spring:
       host: ${REDIS_URL}
       port: 6379
       password: ${REDIS_PASSWORD}
+client:
+  server:
+    domain1: https://localhost:3000
+    domain2: https://jungle5105.xyz:12346
+    domain3: https://hourglass.ninja:12346
