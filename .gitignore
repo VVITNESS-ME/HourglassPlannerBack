@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### HTTPS
+application-local.yml
+application-aws.yml
+keystore.p12
