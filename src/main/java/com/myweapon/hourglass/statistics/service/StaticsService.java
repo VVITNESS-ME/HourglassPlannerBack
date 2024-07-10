@@ -1,9 +1,9 @@
-package com.myweapon.hourglass.statics.service;
+package com.myweapon.hourglass.statistics.service;
 
 import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.statics.dto.*;
-import com.myweapon.hourglass.statics.repository.StudyStaticsViewRepository;
+import com.myweapon.hourglass.statistics.dto.*;
+import com.myweapon.hourglass.statistics.repository.StudyStaticsViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

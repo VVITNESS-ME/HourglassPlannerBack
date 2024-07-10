@@ -40,7 +40,7 @@ public class HourglassService {
     private final CategoryRepository categoryRepository;
     private final EntityManager em;
 
-    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglass(HourglassStartRequest request, User user){
+    public Long startHourglass(HourglassStartRequest request, User user){
         if(isHourglassInProgress(user)){
             throw new RestApiException(ErrorType.HOURGLASS_IN_PROGRESS);
         }
@@ -52,9 +52,22 @@ public class HourglassService {
 
         hourglassRepository.save(hourglass);
 
-        return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHourGlass(hourglass)));
+        return hourglass.getId();
     }
 
+    public Long startHourglassWithTask(Long tId,HourglassStartRequest request,User user){
+        if(isHourglassInProgress(user)){
+            throw new RestApiException(ErrorType.HOURGLASS_IN_PROGRESS);
+        }
+        Task task = taskRepository.findById(tId).orElseThrow(()->new RestApiException(ErrorType.TASK_NOT_EXISTS));
+
+        Hourglass hourglass = Hourglass.toStartHourglass(request);
+        hourglass.setTask(task);
+
+        hourglassRepository.save(hourglass);
+
+        return hourglass.getId();
+    }
     /*
     통계 데이터 : 카테고리 별로 공부한 시간, 오늘 공부한 시간
      */
@@ -66,6 +79,7 @@ public class HourglassService {
 
         hourglass.endAsDefault(task,request);
         em.flush();
+
         List<StudySummeryWithCategoryName> resultSummary = getResultSummery(user);
 
         return ResponseEntity.ok(ApiResponse.success(HourglassSummaryResponse.of(hourglass.getId(), resultSummary)));

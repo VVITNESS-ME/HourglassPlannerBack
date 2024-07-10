@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.statics.dto;
+package com.myweapon.hourglass.statistics.dto;
 
 import com.myweapon.hourglass.common.time.Week;
 import lombok.*;

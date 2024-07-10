@@ -17,10 +17,22 @@ public class HourglassController {
     private final HourglassService hourglassService;
 
     @PostMapping("/start")
-    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglass(@RequestBody HourglassStartRequest hourglassStartRequest
+    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglass(@RequestBody HourglassStartRequest request
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return hourglassService.startHourglass(hourglassStartRequest,userDetails.getUser());
+        User user = userDetails.getUser();
+        Long hId = hourglassService.startHourglass(request,user);
+        return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHId(hId)));
     }
+
+    @PostMapping("/start/{tId}")
+    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglassWithTask
+            (@PathVariable Long tId, @RequestBody HourglassStartRequest request
+                    ,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        Long hId = hourglassService.startHourglassWithTask(tId,request,user);
+        return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHId(hId)));
+    }
+
     @PostMapping("/end")
     public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){

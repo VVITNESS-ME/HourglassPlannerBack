@@ -1,9 +1,8 @@
-package com.myweapon.hourglass.statics.dto;
+package com.myweapon.hourglass.statistics.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 

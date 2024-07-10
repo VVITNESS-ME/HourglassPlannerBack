@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.statics.controller;
+package com.myweapon.hourglass.statistics.controller;
 
 import com.myweapon.hourglass.common.ApiResponse;
 import com.myweapon.hourglass.common.time.DateStartEnd;
@@ -6,8 +6,8 @@ import com.myweapon.hourglass.common.time.DateTimeFrame;
 import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.UserDetailsImpl;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.statics.dto.*;
-import com.myweapon.hourglass.statics.service.StaticsService;
+import com.myweapon.hourglass.statistics.dto.*;
+import com.myweapon.hourglass.statistics.service.StaticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
