@@ -2,10 +2,7 @@ package com.myweapon.hourglass.statics.service;
 
 import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.statics.dto.BurstRatioByCategories;
-import com.myweapon.hourglass.statics.dto.BurstTimeByCategories;
-import com.myweapon.hourglass.statics.dto.TotalBurstByDay;
-import com.myweapon.hourglass.statics.dto.TotalBurstByWeekDay;
+import com.myweapon.hourglass.statics.dto.*;
 import com.myweapon.hourglass.statics.repository.StudyStaticsViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +20,10 @@ public class StaticsService {
     private final StudyStaticsViewRepository studyStaticsViewRepository;
     public List<TotalBurstByDay> calculateTotalBurstByDaysOf(LocalDateTime start, LocalDateTime end, User user){
         return studyStaticsViewRepository.calculateTotalBurstByDaysOf(start,end,user.getId());
+    }
+
+    public List<TotalBurstByMonth> calculateTotalBurstByMonthOf(LocalDateTime start,LocalDateTime end, User user){
+        return studyStaticsViewRepository.calculateTotalBurstByMonthOf(start,end, user.getId());
     }
 
     public List<TotalBurstByWeekDay> calculateTotalBurstByWeekDays(LocalDateTime monday, User user){

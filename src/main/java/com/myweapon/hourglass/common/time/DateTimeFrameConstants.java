@@ -7,4 +7,6 @@ public class DateTimeFrameConstants {
     public static final String FROM_YEAR = "yyyy";
 
     public final static Integer WEEK_DAYS = 7;
+
+    public final static Integer MINUTES = 60;
 }

@@ -1,5 +1,6 @@
 package com.myweapon.hourglass.statics.dto;
 
+import com.myweapon.hourglass.common.time.DateTimeFrameConstants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class TotalBurstByDay {
     private Long totalBurst;
     public TotalBurstByDay(LocalDateTime dateString,Long totalBurst){
         this.date = dateString.toLocalDate();
-        this.totalBurst = totalBurst;
+        this.totalBurst = totalBurst/ DateTimeFrameConstants.MINUTES;
     }
 
     public Boolean isDate(LocalDate date){

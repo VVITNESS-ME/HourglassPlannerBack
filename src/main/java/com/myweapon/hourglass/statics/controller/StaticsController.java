@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class StaticsController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping("/daily-statistics")
+    @GetMapping("/statistics-week")
     public ResponseEntity<ApiResponse<DailyStatisticsResponse>> weekStatistics
             (@RequestParam("date") String dateString
                     ,@RequestParam("day") Week week
@@ -57,5 +58,33 @@ public class StaticsController {
         List<BurstRatioByCategories> byCategories = staticsService.calculateBurstRatioByCategoryOf(monday,sunday,user);
 
         return ResponseEntity.ok(ApiResponse.success(DailyStatisticsResponse.of(byDays,byCategories)));
+    }
+
+    @GetMapping("/statistics-month")
+    public ResponseEntity<ApiResponse<MonthStatisticsResponse>> monthStatistics
+            (@RequestParam("date") String monthStartString,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        LocalDateTime monthStart = DateTimeFrame.FROM_DAY.toLocalDateTime(monthStartString).withDayOfMonth(1);
+        LocalDateTime monthLast = monthStart.plusMonths(1).minusDays(1);
+
+        User user = userDetails.getUser();
+
+        List<TotalBurstByDay> byDays = staticsService.calculateTotalBurstByDaysOf(monthStart,monthLast,user);
+
+        List<BurstRatioByCategories> byCategories = staticsService.calculateBurstRatioByCategoryOf(monthStart,monthLast,user);
+
+        return ResponseEntity.ok(ApiResponse.success(MonthStatisticsResponse.of(byDays,byCategories)));
+    }
+
+    @GetMapping("/statistics-year")
+    public ResponseEntity<ApiResponse<YearStatisticsResponse>> yearStatistics(@RequestParam("date") String dateString,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        LocalDateTime yearStart = DateTimeFrame.FROM_DAY.toLocalDateTime(dateString).withDayOfYear(1);
+        LocalDateTime yearLast = yearStart.plusYears(1).minusDays(1);
+
+        User user = userDetails.getUser();
+
+        List<TotalBurstByMonth> byMonths = staticsService.calculateTotalBurstByMonthOf(yearStart,yearLast,user);
+        List<BurstRatioByCategories> byCategories = staticsService.calculateBurstRatioByCategoryOf(yearStart,yearLast,user);
+
+        return ResponseEntity.ok(ApiResponse.success(YearStatisticsResponse.of(byMonths,byCategories)));
     }
 }

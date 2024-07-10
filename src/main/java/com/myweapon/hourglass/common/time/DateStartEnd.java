@@ -22,10 +22,19 @@ public class DateStartEnd {
                 .build();
     }
 
+    public static DateStartEnd monthOf(LocalDate start, Integer month){
+        return DateStartEnd.builder()
+                .start(start)
+                .end(start.plusMonths(month).minusDays(1))
+                .build();
+    }
+
     public LocalDateTime getStartWithTime(){
         return start.atStartOfDay();
     }
     public LocalDateTime getEndWithTime(){
         return end.atStartOfDay();
     }
+
+
 }

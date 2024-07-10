@@ -11,8 +11,8 @@ import java.util.List;
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
 public class DailyStatisticsResponse {
-    private List<TotalBurstByWeekDay> byDays;
     private List<BurstRatioByCategories> byCategory;
+    private List<TotalBurstByWeekDay> byDays;
 
     public static DailyStatisticsResponse of(List<TotalBurstByWeekDay> byDays, List<BurstRatioByCategories> byCategory){
         return DailyStatisticsResponse.builder()
