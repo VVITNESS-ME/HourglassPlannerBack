@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GardenGetResponse {
-    private List<DayOfGarden> entries;
-    public static GardenGetResponse of(List<DayOfGarden> entries){
+    private List<TotalBurstByDay> entries;
+    public static GardenGetResponse of(List<TotalBurstByDay> entries){
         return GardenGetResponse.builder()
                 .entries(entries)
                 .build();
