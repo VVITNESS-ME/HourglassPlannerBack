@@ -23,15 +23,22 @@ public class CalendarService {
 
     private final CalendarRepository calendarRepository;
 
-    public ResponseEntity<ApiResponse<CalendarGetResponse>> getCalender (@PathVariable Integer months, User user){
+    public ResponseEntity<ApiResponse<CalendarGetResponse>> getCalenderBy(@PathVariable Integer months, User user){
         LocalDate now = LocalDate.now();
         LocalDate after = now.plusMonths(months);
 
-        List<CalendarRemain> schedules = calendarRepository.findRemainCalendar(user.getId(),now,after);
-        schedules.sort(Comparator.comparingInt(CalendarRemain::getDDay));
+        List<CalendarRemain> schedules = calendarRepository.findRemainCalendarDuring(user.getId(),now,after);
+        schedules.sort(Comparator.comparingLong(CalendarRemain::getDDay));
 
         CalendarGetResponse response = CalendarGetResponse.of(schedules);
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    public List<CalendarRemain> getCalendar(User user){
+        LocalDate now = LocalDate.now();
+        List<CalendarRemain> schedules = calendarRepository.findRemainCalendar(user.getId(),now);
+        schedules.sort(Comparator.comparingLong(CalendarRemain::getDDay));
+        return schedules;
     }
 
     public ResponseEntity<ApiResponse<CalendarPostResponse>> addCalendar(CalendarPostRequest request, User user){

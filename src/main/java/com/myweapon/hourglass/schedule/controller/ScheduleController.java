@@ -16,6 +16,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +32,17 @@ public class ScheduleController {
         binder.registerCustomEditor(LocalDateTime.class, new LocalDateTimeEditor());
     }
 
+    @GetMapping("/calendar")
+    public ResponseEntity<ApiResponse<CalendarGetResponse>> getCalendar
+            (@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<CalendarRemain> schedules = calendarService.getCalendar(userDetails.getUser());
+        return ResponseEntity.ok(ApiResponse.success(CalendarGetResponse.of(schedules)));
+    }
+
     @GetMapping("/calendar/{months}")
-    public ResponseEntity<ApiResponse<CalendarGetResponse>> getCalender
+    public ResponseEntity<ApiResponse<CalendarGetResponse>> getCalenderDuring
             (@PathVariable Integer months, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return calendarService.getCalender(months,userDetails.getUser());
+        return calendarService.getCalenderBy(months,userDetails.getUser());
     }
 
     @PostMapping("/calendar")

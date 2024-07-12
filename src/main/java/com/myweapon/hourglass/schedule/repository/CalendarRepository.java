@@ -13,5 +13,9 @@ import java.util.List;
 public interface CalendarRepository extends JpaRepository<Calender,Long> {
     @Query("select new com.myweapon.hourglass.schedule.dto.CalendarRemain(c.description,c.dueDate) " +
             " from Calender c where c.user.id = :user_id and c.dueDate between :today and :after")
-    public List<CalendarRemain> findRemainCalendar(@Param("user_id")Long user_id, @Param("today") LocalDate today, @Param("after")LocalDate after);
+    public List<CalendarRemain> findRemainCalendarDuring(@Param("user_id")Long user_id, @Param("today") LocalDate today, @Param("after")LocalDate after);
+
+    @Query("select new com.myweapon.hourglass.schedule.dto.CalendarRemain(c.description,c.dueDate) " +
+            " from Calender c where c.user.id = :user_id and c.dueDate >= :today")
+    public List<CalendarRemain> findRemainCalendar(@Param("user_id")Long user_id,@Param("today")LocalDate today);
 }
