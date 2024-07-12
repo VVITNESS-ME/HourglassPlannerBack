@@ -18,7 +18,9 @@ public enum ErrorType {
     USER_CATEGORY_NOT_EXISTS(400,"UserCategory doesn't exist"),
     INVALID_REQUEST(400,"request is invalid"),
     NOT_KNOWN_ERROR(400,"error isn't known"),
-    TASK_NOT_EXISTS(400,"task doesn't exist");
+    TASK_NOT_EXISTS(400,"task doesn't exist"),
+    PASSWORD_NOT_CORRESPOND(400,"password doesn't correspond"),
+    DELETED_USER(400,"user is deleted");
 
     private int code;
     private String message;

@@ -15,11 +15,10 @@ import java.time.temporal.ChronoUnit;
 @Slf4j
 public class CalendarRemain {
     private String description;
-    private Integer dDay;
+    private Long dDay;
 
     public CalendarRemain(String description, LocalDate dueDate){
         this.description = description;
-        Period period = Period.between(LocalDate.now(),dueDate);
-        dDay = period.getDays();
+        dDay = ChronoUnit.DAYS.between(LocalDate.now(),dueDate);
     }
 }

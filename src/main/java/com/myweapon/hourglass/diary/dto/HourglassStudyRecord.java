@@ -17,9 +17,10 @@ public class HourglassStudyRecord {
     private LocalDateTime timeEnd;
     private Integer timeBurst;
     private Float rating;
+    private String content;
 
     public HourglassStudyRecord(Long hId,String categoryName
-            ,String color,String taskName,LocalDateTime timeStart,LocalDateTime timeEnd,Integer timeBurst,Float rating){
+            ,String color,String taskName,LocalDateTime timeStart,LocalDateTime timeEnd,Integer timeBurst,Float rating,String content){
         this.hId = hId;
         this.categoryName = categoryName;
         this.color = color;
@@ -28,5 +29,6 @@ public class HourglassStudyRecord {
         this.timeEnd = timeEnd;
         this.timeBurst = timeBurst;
         this.rating = rating;
+        this.content = content;
     }
 }

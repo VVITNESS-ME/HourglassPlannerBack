@@ -1,9 +1,7 @@
-package com.myweapon.hourglass.common;
+package com.myweapon.hourglass.common.time;
 
 import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.security.enumset.ErrorType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,17 +27,12 @@ public class TimeUtils {
 
 
 
-    public static DayStartEnd dayStartEnd(LocalDateTime dateTime){
+    public static DateStartEnd dayStartEnd(LocalDateTime dateTime){
         LocalDate start = dateTime.truncatedTo(ChronoUnit.DAYS).toLocalDate();
-        LocalDate end = start.plusDays(1);
-        return new DayStartEnd(start,end);
+        return DateStartEnd.of(start,1);
     }
 
-    public static DayStartEnd dayStartEnd(LocalDate date){
-        return new DayStartEnd(date,date.plusDays(1));
-    }
-
-    public static DayStartEnd todayStartEnd(){
+    public static DateStartEnd todayStartEnd(){
         return dayStartEnd(LocalDateTime.now());
     }
 }

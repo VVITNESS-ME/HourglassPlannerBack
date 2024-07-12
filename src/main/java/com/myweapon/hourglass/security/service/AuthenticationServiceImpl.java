@@ -65,9 +65,14 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         User user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(()-> new RestApiException(ErrorType.NO_EMAIL_OR_PASSWORD));
 
+        if(user.getIsDeleted()){
+            throw new RestApiException(ErrorType.DELETED_USER);
+        }
+
         if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new RestApiException(ErrorType.NO_EMAIL_OR_PASSWORD);
         }
+
         String jwt = jwtService.generateToken(user);
         JwtAuthenticationResponse data = JwtAuthenticationResponse.of(jwt);
         return ResponseEntity.ok(ApiResponse.<JwtAuthenticationResponse>success(data));

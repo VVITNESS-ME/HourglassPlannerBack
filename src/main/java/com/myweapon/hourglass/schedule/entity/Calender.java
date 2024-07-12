@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -32,12 +33,19 @@ public class Calender {
         this.dueDate = dueDate;
         this.description = description;
     }
-
-    public static Calender of(CalendarPostRequest request,User user){
+    public static Calender of(String description,LocalDate dueDate, User user){
         return Calender.builder()
                 .user(user)
-                .dueDate(request.getWhen())
-                .description(request.getDescription())
+                .dueDate(dueDate)
+                .description(description)
                 .build();
+    }
+
+    public static List<Calender> ListOf(CalendarPostRequest request, User user){
+        LocalDate dueDate = request.getDueDate();
+        List<String> schedules = request.getSchedules();
+        return schedules.stream()
+                .map((schedule)->Calender.of(schedule,dueDate,user))
+                .toList();
     }
 }
