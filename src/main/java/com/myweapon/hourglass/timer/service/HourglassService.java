@@ -123,14 +123,19 @@ public class HourglassService {
         return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHId(hourglass.getId())));
     }
 
+    public Optional<HourglassInfoInProgress> getHourglassInProgressInfo(User user){
+        return userHourglassRepository.findHourglassInProgress(user.getId());
+    }
+
     private Task getOthersTaskOf(User user){
         return taskRepository.findDefaultTaskByCategoryName(DefaultCategory.OTHERS.getName(),user)
                 .orElseThrow();
     }
 
+
     private boolean isHourglassInProgress(User user){
-        Optional<UserHourglass> hourglass = userHourglassRepository.findUserHourglassNotEndByUserId(user.getId());
-        return hourglass.isPresent();
+        Optional<HourglassInfoInProgress> progressInfo = userHourglassRepository.findHourglassInProgress(user.getId());
+        return progressInfo.isPresent();
     }
 
     private List<StudySummeryWithCategoryName> getResultSummery(User user){
