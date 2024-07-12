@@ -11,12 +11,14 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String name;
-
-//    @OneToMany(mappedBy = "user")
-//    private List<UserCategory> userCategories = new ArrayList<>();
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
 
     @Builder
     private User(String email,String password,String name){
