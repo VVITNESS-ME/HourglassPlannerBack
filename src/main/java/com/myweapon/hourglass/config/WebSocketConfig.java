@@ -15,7 +15,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(signalHandler(), "/signal/*")
+        registry.addHandler(signalHandler(), "/{roomId}") // 동적 URL
                 .setAllowedOriginPatterns("*") // 모든 도메인 허용
                 .addInterceptors(new HttpSessionHandshakeInterceptor());
     }

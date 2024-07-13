@@ -1,5 +1,6 @@
 package com.myweapon.hourglass.webchat.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -9,30 +10,46 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 public class SignalSocketHandler extends TextWebSocketHandler {
-    // 각 경로별로 세션을 관리하기 위해 Map을 사용합니다.
-    private final Map<String, Set<WebSocketSession>> roomSessions = new ConcurrentHashMap<>();
+
+    private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final Map<WebSocketSession, String> clients = new ConcurrentHashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String path = session.getUri().getPath();
-        roomSessions.putIfAbsent(path, new CopyOnWriteArraySet<>());
-        roomSessions.get(path).add(session);
-        System.out.println("연결됐음. 현재 연결된 세션 수: " + roomSessions.get(path).size() + " in room " + path);
+        rooms.putIfAbsent(path, new CopyOnWriteArraySet<>());
+        rooms.get(path).add(session);
+
+        String peerId = UUID.randomUUID().toString();
+        clients.put(session, peerId);
+        System.out.println("연결됐음. peerID: " + peerId);
+
+        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(Map.of("type", "peerId", "peerId", peerId))));
+
+        for (WebSocketSession ws : rooms.get(path)) {
+            if (ws.isOpen() && !ws.equals(session)) {
+                ws.sendMessage(new TextMessage(objectMapper.writeValueAsString(Map.of("type", "join", "peerId", peerId))));
+            }
+        }
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String path = session.getUri().getPath();
-        System.out.println("메시지 받음 in room " + path);
-        System.out.println(message.getPayload());
-        for (WebSocketSession ws : roomSessions.get(path)) {
-            if (ws.isOpen() && !ws.getId().equals(session.getId())) {
-                ws.sendMessage(message);
+        Map<String, Object> data = objectMapper.readValue(message.getPayload(), Map.class);
+        data.put("peerId", clients.get(session));
+        String updatedMessage = objectMapper.writeValueAsString(data);
+
+        for (WebSocketSession ws : rooms.get(path)) {
+            if (ws.isOpen() && !ws.equals(session)) {
+                ws.sendMessage(new TextMessage(updatedMessage));
             }
         }
     }
@@ -40,14 +57,18 @@ public class SignalSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         String path = session.getUri().getPath();
-        roomSessions.get(path).remove(session);
-        System.out.println("연결이 끊어졌음. 현재 연결된 세션 수: " + roomSessions.get(path).size() + " in room " + path);
+        rooms.get(path).remove(session);
+        if (rooms.get(path).isEmpty()) {
+            rooms.remove(path);
+        }
+        clients.remove(session);
+        System.out.println("연결이 끊어졌음: " + session.getUri().toString());
     }
 
     // 연결된 세션 수를 5초마다 보내는 메서드
     @Scheduled(fixedRate = 5000)
     public void sendConnectedSessionCount() {
-        for (Map.Entry<String, Set<WebSocketSession>> entry : roomSessions.entrySet()) {
+        for (Map.Entry<String, Set<WebSocketSession>> entry : rooms.entrySet()) {
             String path = entry.getKey();
             int count = entry.getValue().size();
             if (count == 0) {
