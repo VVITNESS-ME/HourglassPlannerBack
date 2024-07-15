@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-
 @Getter
 @Setter
 public class HourglassEndRequest {

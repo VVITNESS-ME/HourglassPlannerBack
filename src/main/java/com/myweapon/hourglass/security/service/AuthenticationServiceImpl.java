@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.security.service;
 
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.security.repository.UserRepository;
@@ -22,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
