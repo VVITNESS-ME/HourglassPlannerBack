@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.common.time;
 
-import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.Getter;
 

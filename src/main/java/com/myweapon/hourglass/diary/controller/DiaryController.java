@@ -1,7 +1,7 @@
 package com.myweapon.hourglass.diary.controller;
 
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.diary.dto.DayStudyRecord;
 import com.myweapon.hourglass.diary.dto.HourglassPutRequest;
 import com.myweapon.hourglass.diary.service.DiaryService;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;

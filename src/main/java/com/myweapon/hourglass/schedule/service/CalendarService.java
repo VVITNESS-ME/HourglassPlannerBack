@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.schedule.service;
 
-import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiResponse;
 import com.myweapon.hourglass.schedule.dto.CalendarGetResponse;
 import com.myweapon.hourglass.schedule.dto.CalendarPostRequest;
 import com.myweapon.hourglass.schedule.dto.CalendarPostResponse;

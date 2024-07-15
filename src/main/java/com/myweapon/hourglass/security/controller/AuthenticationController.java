@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.security.controller;
 
-import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiResponse;
 import com.myweapon.hourglass.security.dto.JwtAuthenticationResponse;
 import com.myweapon.hourglass.security.dto.SignInRequest;
 import com.myweapon.hourglass.security.dto.SignUpRequest;

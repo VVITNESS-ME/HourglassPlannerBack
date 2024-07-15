@@ -3,14 +3,12 @@ package com.myweapon.hourglass.category.controller;
 import com.myweapon.hourglass.category.dto.UserCategoryGetResponse;
 import com.myweapon.hourglass.category.dto.UserCategoryPostRequest;
 import com.myweapon.hourglass.category.service.UserCategoryService;
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

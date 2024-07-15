@@ -1,7 +1,6 @@
-package com.myweapon.hourglass.exception;
+package com.myweapon.hourglass.common.exception;
 
-import com.myweapon.hourglass.RestApiException;
-import com.myweapon.hourglass.common.ErrorResponse;
+import com.myweapon.hourglass.common.dto.ErrorResponse;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,9 @@ public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     protected ResponseEntity<ErrorResponse> handleNotKnownException(Exception e){
-        log.error("not known error");
+//        e.printStackTrace();
+        log.error("Unknown Exception", e);
+//        log.
         ErrorType error = ErrorType.NOT_KNOWN_ERROR;
         return ResponseEntity
                 .status(error.getCode())

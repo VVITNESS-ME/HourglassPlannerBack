@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.statistics.controller;
 
-import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiResponse;
 import com.myweapon.hourglass.common.time.DateStartEnd;
 import com.myweapon.hourglass.common.time.DateTimeFrame;
 import com.myweapon.hourglass.common.time.Week;

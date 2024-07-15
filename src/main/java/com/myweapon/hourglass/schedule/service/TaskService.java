@@ -1,8 +1,8 @@
 package com.myweapon.hourglass.schedule.service;
 
-import com.myweapon.hourglass.RestApiException;
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.common.exception.RestApiException;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.schedule.dto.*;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;

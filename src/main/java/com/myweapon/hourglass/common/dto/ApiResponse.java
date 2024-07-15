@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.common;
+package com.myweapon.hourglass.common.dto;
 
 
 import lombok.Builder;

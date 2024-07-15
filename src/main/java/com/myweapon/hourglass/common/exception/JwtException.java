@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.exception;
+package com.myweapon.hourglass.common.exception;
 
 import com.myweapon.hourglass.security.enumset.ErrorType;
 

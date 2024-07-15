@@ -17,16 +17,6 @@ public interface UserHourglassRepository extends JpaRepository<UserHourglass,Lon
     @Query("select uh from UserHourglass uh where uh.user_id=:id")
     public List<UserHourglass> findUserHourglassByUserId(@Param("id") Long id);
 
-    @Query("select uh from UserHourglass uh where uh.user_id=:id and uh.end is null")
-    public Optional<UserHourglass> findUserHourglassNotEndByUserId(@Param("id") Long id);
-//    private Long hId;
-//    private Long taskId;
-//    private Integer timeGaol;
-//    private LocalDateTime timeStart;
-//    private LocalDateTime timeEnd;
-//    private LocalDateTime timePause;
-//    private LocalDateTime timeResume;
-//    private Integer timeBurst;
     @Query("select new com.myweapon.hourglass.timer.dto.HourglassInfoInProgress(uh.id,uh.task_id,uh.goal,uh.start,uh.end,uh.last_pause,uh.last_resume,uh.burst_time) " +
             "from UserHourglass uh where uh.user_id =:user_id and uh.end is null")
     public Optional<HourglassInfoInProgress> findHourglassInProgress(@Param("user_id")Long userId);
@@ -34,4 +24,7 @@ public interface UserHourglassRepository extends JpaRepository<UserHourglass,Lon
     @Query("select new com.myweapon.hourglass.timer.dto.StudySummeryWithCategory(uh.user_category_id,uh.start,uh.end,uh.burst_time,uh.color) " +
             "from UserHourglass uh where uh.user_id = :userId and uh.end between :start and :end")
     public List<StudySummeryWithCategory> studySummeryByDay(@Param("userId") Long userId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query("select uh.content from UserHourglass uh where uh.user_id =:userId and function('date',uh.end) =:end")
+    public List<String> getContentsOf(@Param("end")LocalDate end, @Param("userId") Long userId);
 }
