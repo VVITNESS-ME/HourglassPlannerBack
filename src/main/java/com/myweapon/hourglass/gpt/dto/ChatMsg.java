@@ -6,12 +6,12 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @ToString
-public class ChatRequestMsgDto {
+public class ChatMsg {
     private String role;
     private String content;
 
     @Builder
-    public ChatRequestMsgDto(String role,String content){
+    public ChatMsg(String role, String content){
         this.role = role;
         this.content = content;
     }

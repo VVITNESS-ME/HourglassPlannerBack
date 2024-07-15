@@ -20,7 +20,9 @@ public enum ErrorType {
     NOT_KNOWN_ERROR(400,"error isn't known"),
     TASK_NOT_EXISTS(400,"task doesn't exist"),
     PASSWORD_NOT_CORRESPOND(400,"password doesn't correspond"),
-    DELETED_USER(400,"user is deleted");
+    DELETED_USER(400,"user is deleted"),
+    GPT_ERROR(400,"gpt_error"),
+    GPT_RESPONSE_ERROR(400,"gpt response abnormally");
 
     private int code;
     private String message;
