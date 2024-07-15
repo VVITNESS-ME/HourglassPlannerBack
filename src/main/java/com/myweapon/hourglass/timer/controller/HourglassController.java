@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/timer")
@@ -17,10 +20,30 @@ public class HourglassController {
     private final HourglassService hourglassService;
 
     @PostMapping("/start")
-    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglass(@RequestBody HourglassStartRequest hourglassStartRequest
+    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglass(@RequestBody HourglassStartRequest request
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return hourglassService.startHourglass(hourglassStartRequest,userDetails.getUser());
+        User user = userDetails.getUser();
+        Long hId = hourglassService.startHourglass(request,user);
+        return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHId(hId)));
     }
+
+    @GetMapping("/progress")
+    public ResponseEntity<ApiResponse<HourglassInfoInProgress>> getHourglassInProgress(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        Optional<HourglassInfoInProgress> hourglassInfoInProgress = hourglassService.getHourglassInProgressInfo(userDetails.getUser());
+        return hourglassInfoInProgress.map(infoInProgress -> ResponseEntity.ok(ApiResponse.success(infoInProgress)))
+                .orElseGet(() -> ResponseEntity.ok(ApiResponse.successWithMessage(null, "hourglass is not in progress")));
+    }
+
+    @PostMapping("/start/{tId}")
+    public ResponseEntity<ApiResponse<HourglassResponse>> startHourglassWithTask
+            (@PathVariable Long tId, @RequestBody HourglassStartRequest request
+                    ,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        Long hId = hourglassService.startHourglassWithTask(tId,request,user);
+        return ResponseEntity.ok(ApiResponse.success(HourglassResponse.fromHId(hId)));
+    }
+
     @PostMapping("/end")
     public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(@RequestBody HourglassEndRequest hourglassEndRequest
             , @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -41,4 +64,5 @@ public class HourglassController {
     public ResponseEntity<ApiResponse<HourglassResponse>> resumeHourglass(@RequestBody HourglassResumeRequest hourglassPauseRequest){
         return hourglassService.resumeHourglass(hourglassPauseRequest);
     }
+
 }

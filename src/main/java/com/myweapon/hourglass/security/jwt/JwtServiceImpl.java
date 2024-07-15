@@ -64,7 +64,8 @@ public class JwtServiceImpl implements JwtService{
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
     }
-    private String generateToken(Map<String, Objects> extraClaims,User user){
+    private String generateToken(Map<String, String> extraClaims, User user){
+        extraClaims.put("email",user.getEmail());
         return Jwts.builder()
                 .setClaims(extraClaims).setSubject(user.getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))

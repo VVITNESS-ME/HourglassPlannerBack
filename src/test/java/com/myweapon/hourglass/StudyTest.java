@@ -1,13 +1,14 @@
 package com.myweapon.hourglass;
 
-import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.common.time.DateTimeFrame;
+import com.myweapon.hourglass.common.time.TimeUtils;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class StudyTest {
     @Test
@@ -51,5 +52,16 @@ public class StudyTest {
     public void LocalDateTimeString(){
         System.out.println(LocalDateTime.now());
         System.out.println(LocalDateTime.now().toString());
+    }
+
+    @Test
+    public void monthTest(){
+        String monthString = "2024-07-01";
+        LocalDateTime yearStart = DateTimeFrame.FROM_DAY.toLocalDateTime(monthString);
+//        System.out.println(yearStart.withDayOfYear(1));
+
+//        LocalDateTime yearStart = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+//        LocalDate start = LocalDate.now().
+//        System.out.println(yearStart);
     }
 }

@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.timer.dto;
 
-import com.myweapon.hourglass.common.TimeUtils;
+import com.myweapon.hourglass.common.time.TimeUtils;
 import lombok.*;
 
 import java.time.LocalDateTime;
