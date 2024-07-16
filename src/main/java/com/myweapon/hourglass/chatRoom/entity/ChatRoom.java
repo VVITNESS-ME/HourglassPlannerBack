@@ -1,10 +1,13 @@
 package com.myweapon.hourglass.chatRoom.entity;
 
+import com.myweapon.hourglass.chatRoom.dto.Room;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,24 +22,33 @@ public class ChatRoom {
     private int joinedPeople;
     private String Name;
     private Boolean isSecretRoom;
-    private String passWord;
+    private String password;
 
     @Builder
-    public ChatRoom(int limitPeople, int joinedPeople, String name, Boolean isSecretRoom, String passWord) {
+    public ChatRoom(int limitPeople, int joinedPeople, String name, Boolean isSecretRoom, String password) {
         this.limitPeople = limitPeople;
         this.joinedPeople = joinedPeople;
-        this.Name = name;
-        this.isSecretRoom = isSecretRoom;
-        this.passWord = passWord;
-    }
-
-    public void incrementJoinedPeople() {
-        this.joinedPeople += 1;
-    }
-
-    public void decrementJoinedPeople() {
-        if (this.joinedPeople > 0) {
-            this.joinedPeople -= 1;
+        this.Name = Objects.requireNonNull(name, "Name cannot be null");
+        this.isSecretRoom = Objects.requireNonNull(isSecretRoom, "isSecretRoom cannot be null");
+        if (isSecretRoom){
+            this.password = Objects.requireNonNull(password, "Password cannot be null");
         }
+    }
+
+    public void changeJoinedPeople(int participants) {
+        if (this.joinedPeople > 0) {
+            this.joinedPeople = participants;
+        }
+    }
+
+    public Room toRoom() {
+        return Room.builder()
+                .roomId(this.id)
+                .title(this.Name)
+                .isSecretRoom(this.isSecretRoom)
+                .password(this.password)
+                .limit(this.limitPeople)
+                .participants(this.joinedPeople)
+                .build();
     }
 }
