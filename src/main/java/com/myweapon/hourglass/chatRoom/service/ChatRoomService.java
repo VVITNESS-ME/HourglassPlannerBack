@@ -1,11 +1,11 @@
 package com.myweapon.hourglass.chatRoom.service;
 
-import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.chatRoom.dto.ChatRoomRequest;
 import com.myweapon.hourglass.chatRoom.dto.Room;
 import com.myweapon.hourglass.chatRoom.dto.RoomResponse;
 import com.myweapon.hourglass.chatRoom.entity.ChatRoom;
 import com.myweapon.hourglass.chatRoom.repository.ChatRoomRepository;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

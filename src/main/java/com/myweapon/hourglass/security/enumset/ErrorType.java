@@ -23,7 +23,9 @@ public enum ErrorType {
     ROOM_IS_FULL(400,"정원 초과입니다."),
     NOT_VALID_ROOM_PASSWORD(400,"비밀번호가 잘못되었습니다."),
     ROOM_IS_NOT_FOUND(400,"방을 찾을수 없습니다."),
-    DELETED_USER(400,"user is deleted");
+    DELETED_USER(400,"user is deleted"),
+    GPT_ERROR(400,"gpt_error"),
+    GPT_RESPONSE_ERROR(400,"gpt response abnormally");
 
     private final int code;
     private final String message;

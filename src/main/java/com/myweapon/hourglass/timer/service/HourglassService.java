@@ -1,11 +1,11 @@
 package com.myweapon.hourglass.timer.service;
 
-import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.category.entity.Category;
 import com.myweapon.hourglass.category.entity.UserCategory;
 import com.myweapon.hourglass.category.repository.UserCategoryRepository;
 import com.myweapon.hourglass.category.repository.CategoryRepository;
-import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiResponse;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.security.entity.User;
@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ public class HourglassService {
     private final UserCategoryRepository userCategoryRepository;
     private final TaskRepository taskRepository;
     private final UserHourglassRepository userHourglassRepository;
-    private final CategoryRepository categoryRepository;
     private final EntityManager em;
 
     public Long startHourglass(HourglassStartRequest request, User user){
@@ -47,56 +47,48 @@ public class HourglassService {
 
         Task task = getOthersTaskOf(user);
 
-        Hourglass hourglass = Hourglass.toStartHourglass(request);
-        hourglass.setTask(task);
-
-        hourglassRepository.save(hourglass);
-
-        return hourglass.getId();
+        return createAndSaveHourglass(task,request);
     }
 
     public Long startHourglassWithTask(Long tId,HourglassStartRequest request,User user){
         if(isHourglassInProgress(user)){
             throw new RestApiException(ErrorType.HOURGLASS_IN_PROGRESS);
         }
+
         Task task = taskRepository.findById(tId).orElseThrow(()->new RestApiException(ErrorType.TASK_NOT_EXISTS));
 
-        Hourglass hourglass = Hourglass.toStartHourglass(request);
-        hourglass.setTask(task);
-
-        hourglassRepository.save(hourglass);
-
-        return hourglass.getId();
+        return createAndSaveHourglass(task, request);
     }
+
     /*
     통계 데이터 : 카테고리 별로 공부한 시간, 오늘 공부한 시간
      */
-    public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglass(HourglassEndRequest request ,User user){
+    public HourglassSummaryResponse endHourglass(HourglassEndRequest request ,User user){
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
         Task task = taskRepository.findDefaultTaskByCategoryName(request.getCategoryName(),user)
                 .orElseThrow(()->new RestApiException((ErrorType.USER_CATEGORY_NOT_EXISTS)));
 
-        hourglass.endAsDefault(task,request);
+        hourglass.end(task,request);
         em.flush();
 
         List<StudySummeryWithCategoryName> resultSummary = getResultSummery(user);
 
-        return ResponseEntity.ok(ApiResponse.success(HourglassSummaryResponse.of(hourglass.getId(), resultSummary)));
+        return HourglassSummaryResponse.of(hourglass.getId(), resultSummary);
     }
 
-    public ResponseEntity<ApiResponse<HourglassSummaryResponse>> endHourglassWithTask(Long taskId, HourglassEndWithTaskRequest request ,User user){
+    public HourglassSummaryResponse endHourglassWithTask(Long taskId, HourglassEndRequest request ,User user){
         Hourglass hourglass = hourglassRepository.findById(request.getHId())
                 .orElseThrow(()->new RestApiException(ErrorType.HOURGLASS_NOT_EXISTS));
         Task task = taskRepository.findTodoTaskNotCompletedByTaskId(taskId)
                 .orElseThrow(()->new RestApiException(ErrorType.TASK_NOT_EXISTS));
 
-        hourglass.endAsTodo(task,request);
+        hourglass.end(task,request);
         em.flush();
 
         List<StudySummeryWithCategoryName> resultSummary = getResultSummery(user);
 
-        return ResponseEntity.ok(ApiResponse.success(HourglassSummaryResponse.of(hourglass.getId(), resultSummary)));
+        return HourglassSummaryResponse.of(hourglass.getId(), resultSummary);
     }
 
 
@@ -127,9 +119,21 @@ public class HourglassService {
         return userHourglassRepository.findHourglassInProgress(user.getId());
     }
 
+    public List<String> getContentOf(LocalDate localDate,User user){
+        return userHourglassRepository.getContentsOf(localDate,user.getId());
+    }
+
     private Task getOthersTaskOf(User user){
         return taskRepository.findDefaultTaskByCategoryName(DefaultCategory.OTHERS.getName(),user)
                 .orElseThrow();
+    }
+
+    private Long createAndSaveHourglass(Task task, HourglassStartRequest request){
+        Hourglass hourglass = Hourglass.toStartHourglass(request);
+        hourglass.setTask(task);
+
+        hourglassRepository.save(hourglass);
+        return hourglass.getId();
     }
 
 
@@ -141,6 +145,7 @@ public class HourglassService {
     private List<StudySummeryWithCategoryName> getResultSummery(User user){
         LocalDateTime start = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
         LocalDateTime end = start.plusDays(1);
+
         List<StudySummeryWithCategory> userCategorySummery
                 = userHourglassRepository.studySummeryByDay(user.getId(), start, end);
 
@@ -154,4 +159,6 @@ public class HourglassService {
 
         return resultSummary;
     }
+
+
 }

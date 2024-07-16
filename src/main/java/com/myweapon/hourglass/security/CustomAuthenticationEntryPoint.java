@@ -1,18 +1,15 @@
 package com.myweapon.hourglass.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.myweapon.hourglass.common.ErrorResponse;
+import com.myweapon.hourglass.common.dto.ErrorResponse;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 

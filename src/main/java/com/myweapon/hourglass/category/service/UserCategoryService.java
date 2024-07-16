@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.category.service;
 
-import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.category.dto.UserCategoryGetResponse;
 import com.myweapon.hourglass.category.dto.UserCategoryPostRequest;
 import com.myweapon.hourglass.category.dto.UserCategoryWithName;
@@ -8,8 +8,8 @@ import com.myweapon.hourglass.category.entity.Category;
 import com.myweapon.hourglass.category.entity.UserCategory;
 import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.category.repository.UserCategoryRepository;
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.security.entity.User;

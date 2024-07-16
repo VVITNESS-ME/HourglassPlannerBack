@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.timer.service;
 
-import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.HourglassResponse;

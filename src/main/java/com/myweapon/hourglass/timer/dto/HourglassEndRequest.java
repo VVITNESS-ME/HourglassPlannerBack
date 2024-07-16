@@ -2,6 +2,7 @@ package com.myweapon.hourglass.timer.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myweapon.hourglass.common.time.TimeUtils;
+import com.myweapon.hourglass.timer.contants.HourglassConstant;
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-
 @Getter
 @Setter
 public class HourglassEndRequest {
-    private final static Float MID_RATING = 2.5f;
-    private final static String EMPTY = "비어 있음";
 
     @JsonProperty("hId")
     private Long hId;
@@ -40,13 +38,13 @@ public class HourglassEndRequest {
 
     public Float getRating(){
         if(rating==null){
-            return MID_RATING;
+            return HourglassConstant.MID_RATING;
         }
         return rating;
     }
     public String getContent(){
         if(StringUtils.isEmpty(content)){
-            return EMPTY;
+            return HourglassConstant.EMPTY;
         }
         return content;
     }

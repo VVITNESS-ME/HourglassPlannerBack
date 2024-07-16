@@ -1,8 +1,8 @@
 package com.myweapon.hourglass.schedule.controller;
 
 
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.common.binder.LocalDateTimeEditor;
 import com.myweapon.hourglass.schedule.dto.*;
 import com.myweapon.hourglass.schedule.service.CalendarService;

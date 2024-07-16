@@ -1,13 +1,11 @@
 package com.myweapon.hourglass.chatRoom.controller;
 
-import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.chatRoom.dto.ChatRoomRequest;
 import com.myweapon.hourglass.chatRoom.dto.ParticipantsRequest;
 import com.myweapon.hourglass.chatRoom.dto.RoomResponse;
 import com.myweapon.hourglass.chatRoom.entity.ChatRoom;
 import com.myweapon.hourglass.chatRoom.service.ChatRoomService;
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.exception.CustomExceptionHandler;
+import com.myweapon.hourglass.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

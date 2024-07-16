@@ -2,7 +2,6 @@ package com.myweapon.hourglass.timer.entity;
 
 import com.myweapon.hourglass.schedule.entity.Task;
 import com.myweapon.hourglass.timer.dto.HourglassEndRequest;
-import com.myweapon.hourglass.timer.dto.HourglassEndWithTaskRequest;
 import com.myweapon.hourglass.timer.dto.HourglassStartRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -72,15 +71,7 @@ public class Hourglass {
     /*
     !주의 : userCategory는 항상 영속 상태의 엔티티만 넣어야 함.
      */
-    public void endAsDefault(Task task, HourglassEndRequest request){
-        this.task = task;
-        end = request.getTimeEnd();
-        burstTime = request.getTimeBurst();
-        rating = request.getRating();
-        content = request.getContent();
-    }
-
-    public void endAsTodo(Task task, HourglassEndWithTaskRequest request){
+    public void end(Task task, HourglassEndRequest request){
         this.task = task;
         end = request.getTimeEnd();
         burstTime = request.getTimeBurst();

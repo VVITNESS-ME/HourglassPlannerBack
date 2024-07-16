@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.profile.service;
 
-import com.myweapon.hourglass.RestApiException;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.profile.dto.NewPasswordRequest;
 import com.myweapon.hourglass.profile.dto.NickNameChangeRequest;
 import com.myweapon.hourglass.security.entity.User;

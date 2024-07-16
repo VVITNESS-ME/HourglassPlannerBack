@@ -1,8 +1,8 @@
 package com.myweapon.hourglass.diary.service;
 
-import com.myweapon.hourglass.RestApiException;
-import com.myweapon.hourglass.common.ApiResponse;
-import com.myweapon.hourglass.common.ApiSuccess;
+import com.myweapon.hourglass.common.exception.RestApiException;
+import com.myweapon.hourglass.common.dto.ApiResponse;
+import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.common.repository.utils.UpdateUtils;
 import com.myweapon.hourglass.diary.dto.DayStudyRecord;
 import com.myweapon.hourglass.diary.dto.HourglassPutRequest;
