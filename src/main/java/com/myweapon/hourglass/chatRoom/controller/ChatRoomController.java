@@ -2,6 +2,7 @@ package com.myweapon.hourglass.chatRoom.controller;
 
 import com.myweapon.hourglass.chatRoom.dto.ChatRoomRequest;
 import com.myweapon.hourglass.chatRoom.dto.ParticipantsRequest;
+import com.myweapon.hourglass.chatRoom.dto.Room;
 import com.myweapon.hourglass.chatRoom.dto.RoomResponse;
 import com.myweapon.hourglass.chatRoom.entity.ChatRoom;
 import com.myweapon.hourglass.chatRoom.service.ChatRoomService;
@@ -26,7 +27,7 @@ public class ChatRoomController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<String>> createChatRoom(@RequestBody ChatRoomRequest chatRoomRequest) {
         String chatRoomId = chatRoomService.createChatRoom(
-                chatRoomRequest.getLimitPeople(),
+                chatRoomRequest.getLimit(),
                 chatRoomRequest.getTitle(),
                 chatRoomRequest.getIsSecretRoom(),
                 chatRoomRequest.getPassword());
@@ -34,10 +35,9 @@ public class ChatRoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ChatRoom>> getChatRoomById(@PathVariable Long id) {
-        Optional<ChatRoom> chatRoom = chatRoomService.getChatRoomById(id);
-        return chatRoom.map(room -> ResponseEntity.ok(ApiResponse.success(room)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ApiResponse<Room>> getChatRoomById(@PathVariable Long id) {
+        Room room = chatRoomService.getChatRoomById(id);
+        return ResponseEntity.ok(ApiResponse.success(room));
     }
 
     @PostMapping("/join/{id}")
