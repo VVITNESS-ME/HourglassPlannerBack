@@ -30,9 +30,9 @@ public class ChatRoomService {
                 .build();
     }
 
-    public String createChatRoom(int limitPeople, String name, Boolean isSecretRoom, String password) {
+    public String createChatRoom(int limit, String name, Boolean isSecretRoom, String password) {
         ChatRoom chatRoom = ChatRoom.builder()
-                .limitPeople(limitPeople)
+                .limit(limit)
                 .joinedPeople(0)
                 .name(name)
                 .isSecretRoom(isSecretRoom)
@@ -42,8 +42,13 @@ public class ChatRoomService {
         return String.valueOf(chatRoom.getId());
     }
 
-    public Optional<ChatRoom> getChatRoomById(Long id) {
-        return chatRoomRepository.findById(id);
+    public Room getChatRoomById(Long id) {
+        Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(id);
+        if (chatRoomOptional.isPresent()) {
+            ChatRoom chatRoom = chatRoomOptional.get();
+            return chatRoom.toRoom();
+        }
+        throw new RestApiException(ErrorType.ROOM_IS_NOT_FOUND);
     }
 
     public String joinChatRoom(Long id, ChatRoomRequest chatRoomRequest) {
@@ -52,7 +57,7 @@ public class ChatRoomService {
             ChatRoom chatRoom = chatRoomOptional.get();
             if(chatRoom.getIsSecretRoom()){
                 if (chatRoom.getPassword().equals(chatRoomRequest.getPassword())) {
-                    if(chatRoom.getJoinedPeople() < chatRoom.getLimitPeople()){
+                    if(chatRoom.getJoinedPeople() < chatRoom.getLimit()){
                         return String.valueOf(id);
                     }else {
                         throw new RestApiException(ErrorType.ROOM_IS_FULL);
@@ -61,7 +66,7 @@ public class ChatRoomService {
                     throw new RestApiException(ErrorType.NOT_VALID_ROOM_PASSWORD);
                 }
             } else {
-                if(chatRoom.getJoinedPeople() < chatRoom.getLimitPeople()){
+                if(chatRoom.getJoinedPeople() < chatRoom.getLimit()){
                     return String.valueOf(id);
                 }else {
                     throw new RestApiException(ErrorType.ROOM_IS_FULL);

@@ -18,15 +18,15 @@ public class ChatRoom {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    private int limitPeople;
+    private int limit;
     private int joinedPeople;
     private String Name;
     private Boolean isSecretRoom;
     private String password;
 
     @Builder
-    public ChatRoom(int limitPeople, int joinedPeople, String name, Boolean isSecretRoom, String password) {
-        this.limitPeople = limitPeople;
+    public ChatRoom(int limit, int joinedPeople, String name, Boolean isSecretRoom, String password) {
+        this.limit = limit;
         this.joinedPeople = joinedPeople;
         this.Name = Objects.requireNonNull(name, "Name cannot be null");
         this.isSecretRoom = Objects.requireNonNull(isSecretRoom, "isSecretRoom cannot be null");
@@ -46,8 +46,7 @@ public class ChatRoom {
                 .roomId(this.id)
                 .title(this.Name)
                 .isSecretRoom(this.isSecretRoom)
-                .password(this.password)
-                .limit(this.limitPeople)
+                .limit(this.limit)
                 .participants(this.joinedPeople)
                 .build();
     }
