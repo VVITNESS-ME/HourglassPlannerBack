@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ChatRoomRequest {
     private String title;
-    private int limitPeople;
+    private int limit;
     private Boolean isSecretRoom;
     private String password;
 }
