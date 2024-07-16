@@ -35,6 +35,13 @@ public class TodayILearnedController {
         DocumentContentDto documentContentDto = chatGPTEnhancedTodayILearnedService.getDocumentContentByChatGPT(dateTodo,user);
         return ApiResponse.success(documentContentDto);
     }
+    @PostMapping("/modify")
+    @ResponseBody
+    public ApiResponse<DocumentContentDto> convertTil(@RequestBody DocumentContentDto requestContentDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        DocumentContentDto documentContentDto = chatGPTEnhancedTodayILearnedService.convertTilWithChatGPT(requestContentDto, user);
+        return ApiResponse.success(documentContentDto);
+    }
 
     @PostMapping("/{dateTodo}/modified")
     public ResponseEntity<ApiSuccess> postTodayILearned
