@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -62,6 +61,20 @@ public class ChatGPTEnhancedTodayILearnedService implements TodayILearnedService
         return ChatResponseToDocumentContentDto(result);
     }
 
+    @Override
+    public DocumentContentDto convertTilWithChatGPT(DocumentContentDto requestContentDto, User user) {
+        List<String> contents = List.of(requestContentDto.getContent().split("\n"));
+        contents = contents.stream().filter((e)->{
+            return !e.equals(HourglassConstant.EMPTY);
+        }).toList();
+        List<ChatMsg> chatMsgList = ChatGPTService.createChatRequestMsgDtoListFrom(contents);
+        chatMsgList.add(ChatGPTService.createSystemChatRequestMsgDtoFrom(GPT_SYSTEM_MESSAGE));
+
+        ChatResponseDto result =  chatGPTService.prompt(ChatGPTService.createChatCompletionDtoFrom(chatMsgList));
+
+        return ChatResponseToDocumentContentDto(result);
+    }
+
     public DocumentContentDto ChatResponseToDocumentContentDto(ChatResponseDto chatResponseDto){
         String gptContent = chatResponseDto.getChoices().get(0).getMessage().getContent();
         System.out.println(gptContent);
@@ -74,20 +87,19 @@ public class ChatGPTEnhancedTodayILearnedService implements TodayILearnedService
 
     @Override
     @Transactional
-    public Boolean updateDocumentContent(DocumentContentDto documentContentDtoUser, LocalDate dateTodo, User user) {
+    public void updateDocumentContent(DocumentContentDto documentContentDtoUser, LocalDate dateTodo, User user) {
         Optional<TodayILearned> optionalTodayILearned = todayILearnedRepository.findByDateTodo(dateTodo,user);
         if(optionalTodayILearned.isEmpty()){
             DocumentContent documentContent = createDocumentContentFrom(documentContentDtoUser);
             user = entityManager.merge(user);
             TodayILearned todayILearned = TodayILearned.of(documentContent,dateTodo,user);
             todayILearnedRepository.save(todayILearned);
-            return true;
+            return;
         }
 
         TodayILearned todayILearned = optionalTodayILearned.get();
         todayILearned.setTitle(documentContentDtoUser.getTitle());
         todayILearned.setContent(documentContentDtoUser.getContent());
-        return true;
     }
 
     public DocumentContent createDocumentEmptyContent(){
