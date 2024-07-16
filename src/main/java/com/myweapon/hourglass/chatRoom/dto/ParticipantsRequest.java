@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @Builder
-public class ChatRoomRequest {
-    private String title;
-    private int limitPeople;
-    private Boolean isSecretRoom;
-    private String password;
+public class ParticipantsRequest {
+    private int current;
 }

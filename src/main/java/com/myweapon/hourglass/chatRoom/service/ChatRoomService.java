@@ -1,20 +1,18 @@
 package com.myweapon.hourglass.chatRoom.service;
 
 import com.myweapon.hourglass.chatRoom.dto.ChatRoomRequest;
+import com.myweapon.hourglass.chatRoom.dto.Room;
+import com.myweapon.hourglass.chatRoom.dto.RoomResponse;
 import com.myweapon.hourglass.chatRoom.entity.ChatRoom;
 import com.myweapon.hourglass.chatRoom.repository.ChatRoomRepository;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+import com.myweapon.hourglass.common.exception.RestApiException;
+import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +20,23 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    public Page<ChatRoom> getChatRooms(int page, int size) {
-        return chatRoomRepository.findAll(PageRequest.of(page, size));
+    public RoomResponse getAllRooms() {
+        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+        List<Room> rooms = chatRooms.stream()
+                .map(ChatRoom::toRoom)
+                .collect(Collectors.toList());
+        return RoomResponse.builder()
+                .rooms(rooms)
+                .build();
     }
 
-    public String createChatRoom(int limitPeople, String name, Boolean isSecretRoom, String passWord) {
+    public String createChatRoom(int limitPeople, String name, Boolean isSecretRoom, String password) {
         ChatRoom chatRoom = ChatRoom.builder()
                 .limitPeople(limitPeople)
                 .joinedPeople(0)
                 .name(name)
                 .isSecretRoom(isSecretRoom)
-                .passWord(passWord)
+                .password(password)
                 .build();
         chatRoomRepository.save(chatRoom);
         return String.valueOf(chatRoom.getId());
@@ -47,31 +51,33 @@ public class ChatRoomService {
         if (chatRoomOptional.isPresent()) {
             ChatRoom chatRoom = chatRoomOptional.get();
             if(chatRoom.getIsSecretRoom()){
-                if (chatRoom.getPassWord().equals(chatRoomRequest.getPassWord())) {
-                    chatRoom.incrementJoinedPeople();
-                    chatRoomRepository.save(chatRoom);
-
-                    return String.valueOf(id);
+                if (chatRoom.getPassword().equals(chatRoomRequest.getPassword())) {
+                    if(chatRoom.getJoinedPeople() < chatRoom.getLimitPeople()){
+                        return String.valueOf(id);
+                    }else {
+                        throw new RestApiException(ErrorType.ROOM_IS_FULL);
+                    }
                 } else {
-                    throw new IllegalArgumentException("Invalid password");
+                    throw new RestApiException(ErrorType.NOT_VALID_ROOM_PASSWORD);
                 }
             } else {
-                chatRoom.incrementJoinedPeople();
-                chatRoomRepository.save(chatRoom);
-
-                return String.valueOf(id);
+                if(chatRoom.getJoinedPeople() < chatRoom.getLimitPeople()){
+                    return String.valueOf(id);
+                }else {
+                    throw new RestApiException(ErrorType.ROOM_IS_FULL);
+                }
             }
         } else {
-            throw new IllegalArgumentException("ChatRoom not found");
+            throw new RestApiException(ErrorType.ROOM_IS_NOT_FOUND);
         }
     }
 
-    public void leaveChatRoom(Long id) {
+    public void changeParticipants(Long id, int participants) {
         chatRoomRepository.findById(id).ifPresent(chatRoom -> {
-            chatRoom.decrementJoinedPeople();
-            if (chatRoom.getJoinedPeople() == 0) {
+            if (participants == 0) {
                 chatRoomRepository.delete(chatRoom);
             } else {
+                chatRoom.changeJoinedPeople(participants);
                 chatRoomRepository.save(chatRoom);
             }
         });
