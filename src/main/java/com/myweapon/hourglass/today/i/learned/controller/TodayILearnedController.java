@@ -2,6 +2,7 @@ package com.myweapon.hourglass.today.i.learned.controller;
 
 import com.myweapon.hourglass.common.dto.ApiResponse;
 import com.myweapon.hourglass.common.dto.ApiSuccess;
+import com.myweapon.hourglass.gpt.dto.response.ChatResponseDto;
 import com.myweapon.hourglass.security.UserDetailsImpl;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.today.i.learned.dto.DocumentContentDto;
@@ -28,11 +29,11 @@ public class TodayILearnedController {
     }
 
     @GetMapping("/{dateTodo}/modified")
-//    @ResponseBody
-    public ResponseEntity<ApiResponse<DocumentContentDto>> getTodayILearnedFromGpt(@PathVariable("dateTodo")LocalDate dateTodo, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @ResponseBody
+    public ApiResponse<DocumentContentDto> getTodayILearnedFromGpt(@PathVariable("dateTodo")LocalDate dateTodo, @AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userDetails.getUser();
         DocumentContentDto documentContentDto = chatGPTEnhancedTodayILearnedService.getDocumentContentByChatGPT(dateTodo,user);
-        return ResponseEntity.ok(ApiResponse.success(documentContentDto));
+        return ApiResponse.success(documentContentDto);
     }
 
     @PostMapping("/{dateTodo}/modified")

@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.gpt.dto.ChatCompletionDto;
+import com.myweapon.hourglass.gpt.dto.response.ChatResponseDto;
+import com.myweapon.hourglass.security.enumset.ErrorType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,10 +40,10 @@ public class SyncChatGPTService implements ChatGPTService
 
 
     @Override
-    public Map<String, Object> prompt(ChatCompletionDto chatCompletionDto) {
+    public ChatResponseDto prompt(ChatCompletionDto chatCompletionDto) {
         System.out.println(baseUrl);
 
-        Map<String, Object> resultMap = new HashMap<>();
+        ChatResponseDto chatResponseDto = null;
 
         URI gptUrl = GPTURIFrom(promptEntryPoint);
         HttpEntity<ChatCompletionDto> requestEntity = new HttpEntity<>(chatCompletionDto, headers);
@@ -49,14 +52,15 @@ public class SyncChatGPTService implements ChatGPTService
 
         try {
             ObjectMapper om = new ObjectMapper();
-            resultMap = om.readValue(response.getBody(), new TypeReference<>() {
-            });
+            chatResponseDto = om.readValue(response.getBody(), ChatResponseDto.class);
         } catch (JsonProcessingException e) {
-            log.debug("JsonMappingException :: " + e.getMessage());
+            e.printStackTrace();
+            throw new RestApiException(ErrorType.GPT_ERROR);
         } catch (RuntimeException e) {
-            log.debug("RuntimeException :: " + e.getMessage());
+            e.printStackTrace();
+            throw new RestApiException(ErrorType.GPT_ERROR);
         }
-        return resultMap;
+        return chatResponseDto;
     }
 
     @Override
