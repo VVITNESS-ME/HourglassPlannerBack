@@ -1,10 +1,14 @@
 package com.myweapon.hourglass.chatRoom.controller;
 
+import com.myweapon.hourglass.RestApiException;
 import com.myweapon.hourglass.chatRoom.dto.ChatRoomRequest;
+import com.myweapon.hourglass.chatRoom.dto.ParticipantsRequest;
+import com.myweapon.hourglass.chatRoom.dto.RoomResponse;
 import com.myweapon.hourglass.chatRoom.entity.ChatRoom;
 import com.myweapon.hourglass.chatRoom.service.ChatRoomService;
+import com.myweapon.hourglass.common.ApiResponse;
+import com.myweapon.hourglass.exception.CustomExceptionHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,45 +16,41 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chatrooms")
+@RequestMapping("/together")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
-
-    @GetMapping("")
-    public ResponseEntity<Page<ChatRoom>> getChatRooms(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(chatRoomService.getChatRooms(page, size));
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponse<RoomResponse>> getChatRooms() {
+        return ResponseEntity.ok(ApiResponse.success(chatRoomService.getAllRooms()));
     }
 
-    @PostMapping("")
-    public ResponseEntity<String> createChatRoom(@RequestBody ChatRoomRequest chatRoomRequest) {
-        String chatRoom = chatRoomService.createChatRoom(
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<String>> createChatRoom(@RequestBody ChatRoomRequest chatRoomRequest) {
+        String chatRoomId = chatRoomService.createChatRoom(
                 chatRoomRequest.getLimitPeople(),
-                chatRoomRequest.getName(),
+                chatRoomRequest.getTitle(),
                 chatRoomRequest.getIsSecretRoom(),
-                chatRoomRequest.getPassWord());
-        return ResponseEntity.ok(chatRoom);
+                chatRoomRequest.getPassword());
+        return ResponseEntity.ok(ApiResponse.success(chatRoomId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ChatRoom> getChatRoomById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ChatRoom>> getChatRoomById(@PathVariable Long id) {
         Optional<ChatRoom> chatRoom = chatRoomService.getChatRoomById(id);
-        return chatRoom.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return chatRoom.map(room -> ResponseEntity.ok(ApiResponse.success(room)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/join/{id}")
-    public ResponseEntity<String> joinChatRoom(@PathVariable Long id, @RequestBody ChatRoomRequest chatRoomRequest) {
-        try {
+    public ResponseEntity<ApiResponse<String>> joinChatRoom(@PathVariable Long id, @RequestBody ChatRoomRequest chatRoomRequest) {
             String token = chatRoomService.joinChatRoom(id, chatRoomRequest);
-            return ResponseEntity.ok(token);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            return ResponseEntity.ok(ApiResponse.success(token));
     }
 
-    @PostMapping("/leave/{id}")
-    public ResponseEntity<Void> leaveChatRoom(@PathVariable Long id) {
-        chatRoomService.leaveChatRoom(id);
-        return ResponseEntity.ok().build();
+    @PostMapping("/participants/{id}")
+    public ResponseEntity<ApiResponse<Void>> leaveChatRoom(@PathVariable Long id, @RequestBody ParticipantsRequest participantsRequest) {
+        chatRoomService.changeParticipants(id, participantsRequest.getCurrent());
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }
