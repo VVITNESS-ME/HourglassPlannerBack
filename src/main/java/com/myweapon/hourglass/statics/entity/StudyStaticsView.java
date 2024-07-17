@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.statistics.entity;
+package com.myweapon.hourglass.statics.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

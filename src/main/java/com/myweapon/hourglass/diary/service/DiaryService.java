@@ -6,7 +6,7 @@ import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.common.repository.utils.UpdateUtils;
 import com.myweapon.hourglass.diary.dto.DayStudyRecord;
 import com.myweapon.hourglass.diary.dto.HourglassPutRequest;
-import com.myweapon.hourglass.statistics.repository.StudyStaticsViewRepository;
+import com.myweapon.hourglass.statics.repository.StudyStaticsViewRepository;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.timer.respository.HourglassRepository;

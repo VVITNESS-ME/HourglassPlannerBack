@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.statistics.dto;
+package com.myweapon.hourglass.statics.dto;
 
 import com.myweapon.hourglass.common.time.DateTimeFrameConstants;
 import lombok.Getter;
