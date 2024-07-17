@@ -16,6 +16,8 @@ import com.myweapon.hourglass.timer.enumset.DefaultCategory;
 import com.myweapon.hourglass.category.repository.CategoryRepository;
 import com.myweapon.hourglass.schedule.repository.TaskRepository;
 import com.myweapon.hourglass.category.repository.UserCategoryRepository;
+import com.myweapon.hourglass.title.entity.UserTitle;
+import com.myweapon.hourglass.title.repository.UserTitleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final TaskRepository taskRepository;
+    private final UserTitleRepository userTitleRepository;
 
     @Override
     @Transactional
@@ -80,6 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private void initUser(User user){
         List<UserCategory> userCategories = addDefaultCategories(user);
         addDefaultTasks(user,userCategories);
+        addTitleRow(user);
     }
 
     private List<UserCategory> addDefaultCategories(User user){
@@ -95,5 +99,25 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         for(UserCategory userCategory : userCategories){
             taskRepository.save(Task.defaultOf(userCategory));
         }
+    }
+    private void addTitleRow(User user){
+        UserTitle userTitle = UserTitle.builder()
+                .title1(false)
+                .title2(false)
+                .title3(false)
+                .title4(false)
+                .title5(false)
+                .title6(false)
+                .title7(false)
+                .title8(false)
+                .title9(false)
+                .title10(false)
+                .title11(false)
+                .title12(false)
+                .title13(false)
+                .main_title(0)
+                .user(user)
+                .build();
+        userTitleRepository.save(userTitle);
     }
 }

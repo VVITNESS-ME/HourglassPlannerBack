@@ -7,5 +7,6 @@ import java.time.LocalDate;
 
 public interface TodayILearnedService {
     public DocumentContentDto getDocumentContent(LocalDate createdDate, User user);
-    public Boolean updateDocumentContent(DocumentContentDto documentContentDto,LocalDate createdDate, User user);
+    public void updateDocumentContent(DocumentContentDto documentContentDto, LocalDate createdDate, User user);
+    public DocumentContentDto convertTilWithChatGPT(DocumentContentDto requestContentDto, User user);
 }
