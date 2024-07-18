@@ -20,9 +20,17 @@ public class TitleController {
     private final TitleService titleService;
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<TitleResponse>> leaveChatRoom(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ApiResponse<TitleResponse>> getTitleList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         TitleResponse TitleResponse = titleService.getTitleInfoByUserId(user);
+        return ResponseEntity.ok(ApiResponse.success(TitleResponse));
+    }
+
+    @PostMapping("/achieve/{titleId}")
+    public ResponseEntity<ApiResponse<TitleResponse>> achieveTitle(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                   @PathVariable String titleId) {
+        User user = userDetails.getUser();
+        TitleResponse TitleResponse = titleService.achieveTitle(user, Integer.parseInt(titleId));
         return ResponseEntity.ok(ApiResponse.success(TitleResponse));
     }
 }

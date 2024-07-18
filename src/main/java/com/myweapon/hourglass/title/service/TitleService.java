@@ -6,4 +6,5 @@ import com.myweapon.hourglass.title.dto.TitleResponse;
 public interface TitleService {
 
     public TitleResponse getTitleInfoByUserId(User user);
+    public TitleResponse achieveTitle(User user, int titleId);
 }
