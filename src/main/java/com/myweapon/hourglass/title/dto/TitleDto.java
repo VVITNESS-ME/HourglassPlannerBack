@@ -13,4 +13,5 @@ public class TitleDto {
     private int id;
     private String name;
     private String achieveCondition;
+    private String titleColor;
 }

@@ -42,6 +42,7 @@ public class UserTitleDto {
                             .id(title.getIndex())
                             .name(title.getTitleName())
                             .achieveCondition(title.getAchievementCondition())
+                            .titleColor(title.getTitleColor())
                             .build());
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
