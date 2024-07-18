@@ -39,6 +39,11 @@ public class TitleServiceImpl implements TitleService {
         return getNewTitleListByUserId(user.getId());
     }
 
+    @Override
+    public TitleDto setMainTitle(User user, int titleId) {
+        return changeMainTitle(user.getId(), titleId);
+    }
+
     private TitleDto turnTrueTitle(User user, int titleId) {
         Optional<UserTitle> userTitleOptional = userTitleRepository.findByUserId(user.getId());
         if(userTitleOptional.isPresent()){
@@ -63,7 +68,7 @@ public class TitleServiceImpl implements TitleService {
         Optional<UserTitle> userTitleOptional = userTitleRepository.findByUserId(userId);
         if(userTitleOptional.isPresent()){
             UserTitle userTitle = userTitleOptional.get();
-            return userTitle.ToUserTitleDto();
+            return userTitle.toUserTitleDto();
         }else {
             throw new RestApiException(ErrorType.NOT_KNOWN_ERROR);
         }
@@ -80,4 +85,31 @@ public class TitleServiceImpl implements TitleService {
         }
         return titleDtoList;
     }
+
+    private TitleDto changeMainTitle(Long userId, int titleId) {
+        Optional<UserTitle> userTitleOptional = userTitleRepository.findByUserId(userId);
+        if (userTitleOptional.isEmpty()) {
+            throw new RestApiException(ErrorType.NOT_KNOWN_ERROR);
+        }
+
+        UserTitle userTitle = userTitleOptional.get();
+        Title titleOfNumber = Title.getTitleOfNumber(titleId);
+        List<TitleDto> titleList = userTitle.toUserTitleDto().getTitleList(true);
+
+        for (TitleDto titleDto : titleList) {
+            if (titleDto.getId() == titleId){
+                userTitle.changeMainTitle(titleId);
+                userTitleRepository.save(userTitle);
+
+                return TitleDto.builder()
+                        .id(titleOfNumber.getIndex())
+                        .name(titleOfNumber.getTitleName())
+                        .achieveCondition(titleOfNumber.getAchievementCondition())
+                        .titleColor(titleOfNumber.getTitleColor())
+                        .build();
+            }
+        }
+        throw new RestApiException(ErrorType.TITLE_IS_NOT_ACHIEVED);
+    }
+
 }

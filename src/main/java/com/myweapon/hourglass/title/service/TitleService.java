@@ -11,4 +11,5 @@ public interface TitleService {
     public TitleResponse getTitleInfoByUserId(User user);
     public TitleDto achieveTitle(User user, int titleId);
     public List<TitleDto> getNewTitleList(User user);
+    public TitleDto setMainTitle(User user, int titleId);
 }

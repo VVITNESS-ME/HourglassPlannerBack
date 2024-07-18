@@ -43,4 +43,12 @@ public class TitleController {
         List<TitleDto> titleResponse = titleService.getNewTitleList(user);
         return ResponseEntity.ok(ApiResponse.success(titleResponse));
     }
+
+    @PostMapping("/set-main-title/{titleId}")
+    public ResponseEntity<ApiResponse<TitleDto>> setMainTitle(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                              @PathVariable String titleId){
+        User user = userDetails.getUser();
+        TitleDto titleDto = titleService.setMainTitle(user, Integer.parseInt(titleId));
+        return ResponseEntity.ok(ApiResponse.success(titleDto));
+    }
 }

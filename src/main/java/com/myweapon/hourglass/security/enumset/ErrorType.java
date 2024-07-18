@@ -25,6 +25,7 @@ public enum ErrorType {
     ROOM_IS_NOT_FOUND(400,"방을 찾을수 없습니다."),
     DELETED_USER(400,"user is deleted"),
     GPT_ERROR(400,"gpt_error"),
+    TITLE_IS_NOT_ACHIEVED(400,"소지하고 있지 않은 업적입니다."),
     GPT_RESPONSE_ERROR(400,"gpt response abnormally");
 
     private final int code;
