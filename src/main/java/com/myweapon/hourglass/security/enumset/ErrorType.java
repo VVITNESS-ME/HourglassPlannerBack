@@ -26,7 +26,7 @@ public enum ErrorType {
     DELETED_USER(400,"user is deleted"),
     GPT_ERROR(400,"gpt_error"),
     GPT_RESPONSE_ERROR(400,"gpt response abnormally"),
-    HOURGLASS_TIME_ERROR(400,"end or pause is before start or resume");
+    TIME_ORDER_ERROR(400,"end or pause is before start or resume");
 
     private final int code;
     private final String message;

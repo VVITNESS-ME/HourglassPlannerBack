@@ -2,8 +2,10 @@ package com.myweapon.hourglass.statistics.service;
 
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.query.FluxTable;
 import com.myweapon.hourglass.config.InfluxDBConfig;
 import com.myweapon.hourglass.security.entity.User;
+import com.myweapon.hourglass.statistics.dto.field.BurstTimeByDay;
 import com.myweapon.hourglass.statistics.dto.response.DayStatisticsResponse;
 import com.myweapon.hourglass.statistics.dto.response.GardenResponse;
 import com.myweapon.hourglass.statistics.dto.response.MonthStatisticsResponse;
@@ -12,9 +14,11 @@ import com.myweapon.hourglass.statistics.repository.HourglassAuditRepository;
 import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,14 +45,8 @@ public class InfluxStatisticsService implements StatisticsService{
 
     @Override
     public GardenResponse getGardens(LocalDate start, LocalDate end, User user) {
-        String startFormat = start.format(DateTimeFormatter.ISO_DATE);
-        String endFormat = start.format(DateTimeFormatter.ISO_DATE);
-        String flux = String.format("from(bucket:\"%s\") |> " +
-                "range(start:-30h)|> " +
-                "filter(fn: (r) => r.user_id == \"%s\")"
-                , InfluxDBConfig.bucket,startFormat,endFormat, user.getId());
-//        String flux = "from(bucket:\"s\") |> range(start:-30h)|>filter(fn: (r) => r.user_id == \"2\")";
-        return null;
+        List<BurstTimeByDay> tables =  hourglassAuditRepository.getBurstTimeByDay(start,end,user);
+        return GardenResponse.of(tables);
     }
 
     @Override
