@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserNewTitleRepository extends JpaRepository<UserNewTitle, Long> {
-    List<UserNewTitle> findAllByUserId(Long userId);
+    List<UserNewTitle> findByUserId(Long userId);
 }

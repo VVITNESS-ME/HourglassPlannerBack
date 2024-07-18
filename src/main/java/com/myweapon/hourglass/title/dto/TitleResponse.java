@@ -14,4 +14,5 @@ import java.util.List;
 public class TitleResponse {
     private List<TitleDto> achievedTitleList;
     private List<TitleDto> notAchievedTitleList;
+    private TitleDto mainTitle;
 }

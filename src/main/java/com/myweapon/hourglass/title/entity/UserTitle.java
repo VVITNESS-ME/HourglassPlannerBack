@@ -56,7 +56,7 @@ public class UserTitle {
         this.main_title = main_title;
     }
 
-    public UserTitleDto ToUserTitleDto(){
+    public UserTitleDto toUserTitleDto(){
         return UserTitleDto.builder()
                 .main_title(this.main_title)
                 .title1(this.title1)
@@ -91,5 +91,9 @@ public class UserTitle {
             case TITLE12 -> this.title12 = true;
             case TITLE13 -> this.title13 = true;
         }
+    }
+
+    public void changeMainTitle(int titleId){
+        this.main_title = titleId;
     }
 }
