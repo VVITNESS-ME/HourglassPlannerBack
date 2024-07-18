@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 @Getter
 public enum Title {
+    TITLE0(0, "업적 없음", "메인 업적이 비어있습니다.", "#888888"),
     TITLE1(1, "시작이 반", "모든 타이머 첫번째 종료시", "#FFD700"),
     TITLE2(2, "망부석", "3시간 동안 자리이탈 또는 졸음 없음", "#FF69B4"),
     TITLE3(3, "원펀맨", "운동 카테고리 100시간 달성 (누적)", "#1E90FF"),

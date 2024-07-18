@@ -26,7 +26,9 @@ public enum ErrorType {
     DELETED_USER(400,"user is deleted"),
     GPT_ERROR(400,"gpt_error"),
     GPT_RESPONSE_ERROR(400,"gpt response abnormally"),
-    TIME_ORDER_ERROR(400,"end or pause is before start or resume");
+    TIME_ORDER_ERROR(400,"end or pause is before start or resume"),
+    TITLE_IS_NOT_ACHIEVED(400,"소지하고 있지 않은 업적입니다.");
+
 
     private final int code;
     private final String message;
