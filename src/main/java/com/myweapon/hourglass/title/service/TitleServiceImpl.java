@@ -97,7 +97,7 @@ public class TitleServiceImpl implements TitleService {
         List<TitleDto> titleList = userTitle.toUserTitleDto().getTitleList(true);
 
         for (TitleDto titleDto : titleList) {
-            if (titleDto.getId() == titleId){
+            if (titleDto.getId() == titleId || titleId == 0){
                 userTitle.changeMainTitle(titleId);
                 userTitleRepository.save(userTitle);
 
