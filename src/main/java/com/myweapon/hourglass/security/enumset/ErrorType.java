@@ -25,7 +25,8 @@ public enum ErrorType {
     ROOM_IS_NOT_FOUND(400,"방을 찾을수 없습니다."),
     DELETED_USER(400,"user is deleted"),
     GPT_ERROR(400,"gpt_error"),
-    GPT_RESPONSE_ERROR(400,"gpt response abnormally");
+    GPT_RESPONSE_ERROR(400,"gpt response abnormally"),
+    HOURGLASS_TIME_ERROR(400,"end or pause is before start or resume");
 
     private final int code;
     private final String message;

@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @Slf4j
 public class WebClientConfig {
-
     @Bean
     public WebClient webClient() {
         WebClient webClient = WebClient.builder()

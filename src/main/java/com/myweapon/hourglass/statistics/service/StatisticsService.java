@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface StatisticsService {
-    GardenResponse getGardens(User user);
+    GardenResponse getGardens(LocalDate start, LocalDate end, User user);
     DayStatisticsResponse getDayStatistics(LocalDate date, User user);
     MonthStatisticsResponse getMonthStatistics(LocalDate date,User user);
     YearStatisticsResponse getYearStatistics(LocalDate date, User user);
