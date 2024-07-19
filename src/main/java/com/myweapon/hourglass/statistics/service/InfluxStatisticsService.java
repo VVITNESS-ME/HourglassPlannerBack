@@ -2,6 +2,7 @@ package com.myweapon.hourglass.statistics.service;
 
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.myweapon.hourglass.config.InfluxDBConfig;
 import com.myweapon.hourglass.security.entity.User;
@@ -17,8 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +48,48 @@ public class InfluxStatisticsService implements StatisticsService{
         hourglassAuditRepository.recordEndLog(hourglass,user);
     }
 
+    public List<Integer> getBurstTimeByHour(LocalDate date, User user){
+        Optional<FluxTable> optionalDayRecords = hourglassAuditRepository.getDayRecords(date,user);
+        List<Integer> burstTimeByHourDuringDay = burstTimeByHourDuringDay();
+        if(optionalDayRecords.isEmpty()){
+            return burstTimeByHourDuringDay;
+        }
+
+        FluxTable dayRecords = optionalDayRecords.get();
+
+        for(FluxRecord hourglassRecord : dayRecords.getRecords()){
+            Integer burstTime = ((Long) Objects.requireNonNull(hourglassRecord.getValue())).intValue();
+            LocalTime timeInstant = LocalDateTime.ofInstant(hourglassRecord.getTime(), ZoneOffset.UTC).toLocalTime();
+
+            int secondAfterHour = timeInstant.getSecond()+timeInstant.getMinute()*60;
+
+            if(secondAfterHour >= burstTime){
+                int hour = timeInstant.getHour();
+                int before = burstTimeByHourDuringDay.get(hour);
+                burstTimeByHourDuringDay.set(hour,before+burstTime);
+                continue;
+            }
+
+            int hour = timeInstant.getHour();
+            int before = burstTimeByHourDuringDay.get(hour);
+            burstTimeByHourDuringDay.set(hour,before+secondAfterHour);
+            hour --;
+            burstTime -= secondAfterHour;
+
+            while(burstTime > 3600){
+                before = burstTimeByHourDuringDay.get(hour);
+                burstTimeByHourDuringDay.set(hour, before+3600);
+                hour--;
+                burstTime-=3600;
+            }
+
+            before = burstTimeByHourDuringDay.get(hour);
+            burstTimeByHourDuringDay.set(hour,before+burstTime);
+        }
+
+        return burstTimeByHourDuringDay;
+    }
+
     @Override
     public GardenResponse getGardens(LocalDate start, LocalDate end, User user) {
         List<BurstTimeByDay> tables =  hourglassAuditRepository.getBurstTimeByDay(start,end,user);
@@ -62,5 +109,9 @@ public class InfluxStatisticsService implements StatisticsService{
     @Override
     public YearStatisticsResponse getYearStatistics(LocalDate date, User user) {
         return null;
+    }
+
+    private List<Integer> burstTimeByHourDuringDay(){
+        return new ArrayList<>(Collections.nCopies(24,0));
     }
 }

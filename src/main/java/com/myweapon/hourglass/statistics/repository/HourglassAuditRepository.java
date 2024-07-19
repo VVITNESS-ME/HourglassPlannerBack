@@ -13,11 +13,11 @@ import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -64,7 +64,7 @@ public class HourglassAuditRepository {
         return BurstTimeByDay.listFrom(tables.get(0).getRecords());
     }
 
-    public List<Integer> getBurstTimeByHour(LocalDate date, User user){
+    public Optional<FluxTable> getDayRecords(LocalDate date, User user){
         String dateIsoInstanceString = localDateToIsoInstantString(date);
         String nextDateStartIsoInstanceString  = localDateToIsoInstantString(date.plusDays(1));
 
@@ -79,19 +79,34 @@ public class HourglassAuditRepository {
 
         List<FluxTable> tables = queryApi.query(flux);
 
-        List<Integer> burstTimeByHourDuringDay = burstTimeByHourDuringDay();
-
-        if(tables.isEmpty()){
-            return burstTimeByHourDuringDay;
+        if (tables.isEmpty()){
+            return Optional.<FluxTable>empty();
         }
 
-        FluxTable hourglassRecordsOfDay = tables.get(0);
-
-        for(FluxRecord hourglassRecord : hourglassRecordsOfDay.getRecords()){
-
-        }
-        return null;
+        return Optional.of(tables.get(0));
     }
+
+//    public List<Integer> getBurstTimeByHour(LocalDate date, User user){
+//        Optional<FluxTable> optionalDayRecords = getDayRecords(date,user);
+//        if(optionalDayRecords.isEmpty()){
+//            return burstTimeByHourDuringDay();
+//        }
+//
+//
+////        FluxTable hourglassRecordsOfDay = tables.get(0);
+//
+////        for(FluxRecord hourglassRecord : hourglassRecordsOfDay.getRecords()){
+////            Integer burstTime = ((Long) Objects.requireNonNull(hourglassRecord.getValue())).intValue();
+////            LocalDateTime instant = LocalDateTime.ofInstant(hourglassRecord.getTime(),ZoneOffset.UTC);
+////
+////            if(instant.getSecond()+instant.getMinute()*60 > burstTime){
+////                int hour = instant.getHour();
+////                int before = burstTimeByHourDuringDay.get(hour);
+////                burstTimeByHourDuringDay.set(hour,before+burstTime);
+////            }
+////        }
+//        return null;
+//    }
 
     private String localDateToIsoInstantString(LocalDate localDate){
         return localDate
@@ -100,7 +115,4 @@ public class HourglassAuditRepository {
                 .toString();
     }
 
-    private List<Integer> burstTimeByHourDuringDay(){
-        return new ArrayList<>(Collections.nCopies(24,0));
-    }
 }

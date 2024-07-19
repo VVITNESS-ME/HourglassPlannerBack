@@ -46,7 +46,6 @@ public class HourglassAudit {
     }
 
     public static List<HourglassAudit> pauseListOf(Hourglass hourglass, User user){
-        Integer burstTime;
         LocalDateTime last;
         if(hourglass.getLast_resume()==null){
             last = hourglass.getStart();
@@ -67,7 +66,7 @@ public class HourglassAudit {
             last = hourglass.getStart();
         }
         else{
-            last = hourglass.getEnd();
+            last = hourglass.getLast_resume();
         }
 
         return splitHourglassAuditByDay(hourglass,user,last);
