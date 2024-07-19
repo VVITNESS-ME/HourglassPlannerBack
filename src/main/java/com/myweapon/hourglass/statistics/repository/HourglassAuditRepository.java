@@ -3,7 +3,6 @@ package com.myweapon.hourglass.statistics.repository;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
-import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.myweapon.hourglass.config.InfluxDBConfig;
 import com.myweapon.hourglass.security.entity.User;
@@ -13,9 +12,7 @@ import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -43,6 +40,16 @@ public class HourglassAuditRepository {
         writeApiBlocking.writeMeasurements(WritePrecision.S, hourglassAudits);
     }
 
+    /**
+     * start에서 end의 기간 동안 각 하루의 총 공부량을 계산.
+     * end는 공부하는 날짜에 포함시키지 않는다.
+     * 예를들어 7월의 기간(07-01 ~ 07-31)의 통계량을 알고 싶다면
+     * start는 07-01, end는 08-01의 날짜로 요청해야 한다.
+     * @param start
+     * @param end
+     * @param user
+     * @return
+     */
     public List<BurstTimeByDay> getBurstTimeByDay(LocalDate start, LocalDate end, User user) {
         String startIsoInstanceString = localDateToIsoInstantString(start);
         String endIsoInstanceString = localDateToIsoInstantString(end);
@@ -54,7 +61,6 @@ public class HourglassAuditRepository {
                         "|> aggregateWindow(every: 1d, fn: sum, createEmpty: true)"+
                         "|> fill(value:0)"
                 , InfluxDBConfig.bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
-
         List<FluxTable> tables = queryApi.query(flux);
 
         if (tables.isEmpty()){
@@ -85,28 +91,6 @@ public class HourglassAuditRepository {
 
         return Optional.of(tables.get(0));
     }
-
-//    public List<Integer> getBurstTimeByHour(LocalDate date, User user){
-//        Optional<FluxTable> optionalDayRecords = getDayRecords(date,user);
-//        if(optionalDayRecords.isEmpty()){
-//            return burstTimeByHourDuringDay();
-//        }
-//
-//
-////        FluxTable hourglassRecordsOfDay = tables.get(0);
-//
-////        for(FluxRecord hourglassRecord : hourglassRecordsOfDay.getRecords()){
-////            Integer burstTime = ((Long) Objects.requireNonNull(hourglassRecord.getValue())).intValue();
-////            LocalDateTime instant = LocalDateTime.ofInstant(hourglassRecord.getTime(),ZoneOffset.UTC);
-////
-////            if(instant.getSecond()+instant.getMinute()*60 > burstTime){
-////                int hour = instant.getHour();
-////                int before = burstTimeByHourDuringDay.get(hour);
-////                burstTimeByHourDuringDay.set(hour,before+burstTime);
-////            }
-////        }
-//        return null;
-//    }
 
     private String localDateToIsoInstantString(LocalDate localDate){
         return localDate

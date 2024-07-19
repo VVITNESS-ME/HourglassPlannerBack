@@ -42,7 +42,7 @@ public enum Week {
         throw new IllegalArgumentException("No matching weekCode");
     }
 
-    public DateStartEnd getWeekInterval(LocalDate date){
+    public DateStartEnd getWeekDuration(LocalDate date){
         return getWeekInterval.apply(date);
     }
 

@@ -15,15 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatisticsController {
     private final InfluxStatisticsService influxStatisticsService;
-    @GetMapping("/first")
-    @ResponseBody
-    public GardenResponse getTest(@RequestParam("start") LocalDate start, @RequestParam("end") LocalDate end, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return influxStatisticsService.getGardens(start,end,userDetails.getUser());
-    }
-
-    @GetMapping("/second")
-    @ResponseBody
-    public List<Integer> getTest2(@RequestParam("date") LocalDate date, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return influxStatisticsService.getBurstTimeByHour(date,userDetails.getUser());
-    }
+//    @GetMapping("/first")
+//    @ResponseBody
+//    public GardenResponse getTest(@RequestParam("start") LocalDate start, @RequestParam("end") LocalDate end, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        return influxStatisticsService.getGardens(start,end,userDetails.getUser());
+//    }
+//
+//    @GetMapping("/second")
+//    @ResponseBody
+//    public List<Integer> getTest2(@RequestParam("date") LocalDate date, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        return influxStatisticsService.getBurstTimeByHour(date,userDetails.getUser());
+//    }
 }

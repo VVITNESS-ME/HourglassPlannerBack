@@ -6,5 +6,5 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record DayStatisticsResponse(List<BurstRatioByCategories> byCategories, List<Integer> byHours) {
+public record  DayStatisticsResponse(List<BurstRatioByCategories> byCategories, List<Integer> byHours) {
 }

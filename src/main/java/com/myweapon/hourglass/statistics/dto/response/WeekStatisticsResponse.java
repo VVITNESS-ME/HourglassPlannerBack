@@ -5,5 +5,5 @@ import com.myweapon.hourglass.statistics.dto.field.BurstTimeByWeekDay;
 
 import java.util.List;
 
-public record MonthStatisticsResponse(List<BurstRatioByCategories> byCategories, List<BurstTimeByWeekDay> byDays) {
+public record WeekStatisticsResponse(List<BurstRatioByCategories> byCategories,List<BurstTimeByWeekDay> byWeekDays) {
 }

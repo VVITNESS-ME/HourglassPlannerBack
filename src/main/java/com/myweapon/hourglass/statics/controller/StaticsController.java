@@ -7,7 +7,8 @@ import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.UserDetailsImpl;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.statics.dto.*;
-import com.myweapon.hourglass.statics.service.StaticsService;
+//import com.myweapon.hourglass.statics.service.StaticsService;
+import com.myweapon.hourglass.statics.service.StatisticsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/statics")
 public class StaticsController {
 
-    private final StaticsService staticsService;
+    private final StatisticsServiceImpl staticsService;
 
     @GetMapping("/garden")
     public ResponseEntity<ApiResponse<GardenGetResponse>> getGardenOfInterval
