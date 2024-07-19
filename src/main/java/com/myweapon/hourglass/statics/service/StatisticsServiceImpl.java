@@ -3,7 +3,7 @@ package com.myweapon.hourglass.statics.service;
 import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.statics.dto.*;
-import com.myweapon.hourglass.statics.repository.StudyStatisticsViewRepository;
+import com.myweapon.hourglass.statics.repository.StudyStaticsViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +17,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StatisticsServiceImpl {
-    private final StudyStatisticsViewRepository studyStatisticsViewRepository;
+    private final StudyStaticsViewRepository studyStaticsViewRepository;
     public List<TotalBurstByDay> calculateTotalBurstByDaysOf(LocalDateTime start, LocalDateTime end, User user){
-        return studyStatisticsViewRepository.calculateTotalBurstByDaysOf(start,end,user.getId());
+        return studyStaticsViewRepository.calculateTotalBurstByDaysOf(start,end,user.getId());
     }
 
     public List<TotalBurstByMonth> calculateTotalBurstByMonthOf(LocalDateTime start,LocalDateTime end, User user){
-        return studyStatisticsViewRepository.calculateTotalBurstByMonthOf(start,end, user.getId());
+        return studyStaticsViewRepository.calculateTotalBurstByMonthOf(start,end, user.getId());
     }
 
     public List<TotalBurstByWeekDay> calculateTotalBurstByWeekDays(LocalDateTime monday, User user){
@@ -46,7 +46,7 @@ public class StatisticsServiceImpl {
     }
 
     public List<BurstTimeByCategories> calculateBurstTimeByCategoryOf(LocalDateTime start, LocalDateTime end, User user){
-        return studyStatisticsViewRepository.calculateTotalBurstByCategoriesOf(start,end,user.getId());
+        return studyStaticsViewRepository.calculateTotalBurstByCategoriesOf(start,end,user.getId());
     }
 
     public List<BurstRatioByCategories> calculateBurstRatioByCategoryOf(LocalDateTime start,LocalDateTime end,User user){

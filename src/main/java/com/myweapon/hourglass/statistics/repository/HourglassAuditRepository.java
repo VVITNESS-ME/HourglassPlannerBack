@@ -66,7 +66,6 @@ public class HourglassAuditRepository {
         if (tables.isEmpty()){
             return BurstTimeByDay.zeroBurstTimeListFrom(start,end);
         }
-
         return BurstTimeByDay.listFrom(tables.get(0).getRecords());
     }
 
@@ -82,15 +81,15 @@ public class HourglassAuditRepository {
                         "|> filter(fn: (r) => r._value != 0)"+
                         "|> keep(columns: [\"_time\", \"_value\"])"
                 , InfluxDBConfig.bucket, dateIsoInstanceString, nextDateStartIsoInstanceString, user.getId());
-
         List<FluxTable> tables = queryApi.query(flux);
 
         if (tables.isEmpty()){
             return Optional.<FluxTable>empty();
         }
-
         return Optional.of(tables.get(0));
     }
+
+//    public
 
     private String localDateToIsoInstantString(LocalDate localDate){
         return localDate

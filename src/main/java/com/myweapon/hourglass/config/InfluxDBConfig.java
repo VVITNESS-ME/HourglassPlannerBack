@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class InfluxDBConfig {
-    //${gpt.auth.token}
-//    @Value("${gpt.auth.token}")
-//    private String secretKey ;
     @Value("${influx.token}")
     private String tokenString;
     public static String org = "hourglass";

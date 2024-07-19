@@ -1,16 +1,17 @@
 package com.myweapon.hourglass.statistics.service;
 
+import com.myweapon.hourglass.common.time.Week;
+import com.myweapon.hourglass.common.time.WeekDuration;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.statistics.dto.field.BurstRatioByCategories;
-import com.myweapon.hourglass.statistics.dto.field.BurstTimeByCategories;
-import com.myweapon.hourglass.statistics.dto.response.DayStatisticsResponse;
-import com.myweapon.hourglass.statistics.dto.response.GardenResponse;
-import com.myweapon.hourglass.statistics.dto.response.MonthStatisticsResponse;
-import com.myweapon.hourglass.statistics.dto.response.WeekStatisticsResponse;
+import com.myweapon.hourglass.statics.dto.TotalBurstByWeekDay;
+import com.myweapon.hourglass.statistics.dto.field.*;
+import com.myweapon.hourglass.statistics.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,22 +26,44 @@ public class ComprehensiveStatisticsService {
 
     public DayStatisticsResponse getDayStatisticsResponse(LocalDate date, User user){
         List<BurstTimeByCategories> burstTimeByCategories = categoryStatisticsService.getBurstTimeByCategories(date,user);
-        List<BurstRatioByCategories> burstRatioByCategories = BurstRatioByCategories.listFrom(burstTimeByCategories);
+        List<BurstRatioByCategories> byCategories = BurstRatioByCategories.listFrom(burstTimeByCategories);
 
-        List<Integer> statisticsByHours = timeFlowStatisticsService.getBurstTimeByHour(date,user);
+        List<Integer> byHours = timeFlowStatisticsService.getBurstTimeByHour(date,user);
 
-        return DayStatisticsResponse.builder()
-                .byCategories(burstRatioByCategories)
-                .byHours(statisticsByHours)
-                .build();
+        return DayStatisticsResponse.of(byCategories,byHours);
     }
 
-    public WeekStatisticsResponse getWeekStatisticsResponse(){
+    public WeekStatisticsResponse getWeekStatisticsResponse(WeekDuration weekDuration,User user){
+        LocalDate monday = weekDuration.monday();
+        LocalDate sunday = weekDuration.sunday();
 
+        List<BurstTimeByCategories> burstTimeByCategories = categoryStatisticsService
+                .getBurstTimeByCategories(weekDuration.monday(),weekDuration.sunday().plusDays(1),user);
+        List<BurstRatioByCategories> byCategories = BurstRatioByCategories.listFrom(burstTimeByCategories);
+
+        List<BurstTimeByDay> burstTimeByDays = timeFlowStatisticsService.getBurstTimeByDay(monday,sunday.plusDays(1),user);
+        List<BurstTimeByWeekDay> byWeekDays = BurstTimeByWeekDay.listOf(monday,burstTimeByDays);
+
+        return WeekStatisticsResponse.of(byCategories,byWeekDays);
     }
 
-//    public MonthStatisticsResponse getMonthStatisticsResponse(){
-//
+    public MonthStatisticsResponse getMonthStatisticsResponse(LocalDate date,User user){
+        LocalDate monthStart = date.withDayOfMonth(1);
+        LocalDate monthEnd = date.plusMonths(1);
+
+        List<BurstTimeByCategories> burstTimeByCategories = categoryStatisticsService
+                .getBurstTimeByCategories(monthStart,monthEnd,user);
+        List<BurstRatioByCategories> byCategories = BurstRatioByCategories.listFrom(burstTimeByCategories);
+
+        List<BurstTimeByDay> burstTimeByDays = timeFlowStatisticsService.getBurstTimeByDay(monthStart,monthEnd,user);
+//        List<BurstTimeByMonth> byMonths = burstTimeByDays.stream()
+//                .map(BurstTimeByMonth::of)
+//                .toList();
+
+        return MonthStatisticsResponse.of(byCategories,burstTimeByDays);
+    }
+
+//    public YearStatisticsResponse getYearStatisticsResponse(LocalDate date,User user){
 //
 //    }
 }

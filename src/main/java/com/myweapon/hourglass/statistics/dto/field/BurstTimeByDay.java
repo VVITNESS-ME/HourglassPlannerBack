@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Builder
-public record BurstTimeByDay(LocalDate day, Integer totalBurst) {
+public record BurstTimeByDay(LocalDate day, Integer burstTime) {
     public static List<BurstTimeByDay> zeroBurstTimeListFrom(LocalDate start,LocalDate end){
         if(end.isBefore(start)){
             throw new RestApiException(ErrorType.TIME_ORDER_ERROR);
@@ -40,6 +40,11 @@ public record BurstTimeByDay(LocalDate day, Integer totalBurst) {
     }
 
     public static BurstTimeByDay of(LocalDate day, Integer totalBurst){
-        return BurstTimeByDay.builder().day(day).totalBurst(totalBurst).build();
+        return BurstTimeByDay.builder().day(day).burstTime(totalBurst).build();
+    }
+
+
+    public Boolean isDay(LocalDate day){
+        return this.day.equals(day);
     }
 }

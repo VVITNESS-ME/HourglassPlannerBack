@@ -6,7 +6,7 @@ import com.myweapon.hourglass.common.dto.ApiSuccess;
 import com.myweapon.hourglass.common.repository.utils.UpdateUtils;
 import com.myweapon.hourglass.diary.dto.DayStudyRecord;
 import com.myweapon.hourglass.diary.dto.HourglassPutRequest;
-import com.myweapon.hourglass.statics.repository.StudyStatisticsViewRepository;
+import com.myweapon.hourglass.statics.repository.StudyStaticsViewRepository;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.security.enumset.ErrorType;
 import com.myweapon.hourglass.timer.respository.HourglassRepository;
@@ -19,14 +19,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Service
 public class DiaryService {
-    private final StudyStatisticsViewRepository studyStatisticsViewRepository;
+    private final StudyStaticsViewRepository studyStaticsViewRepository;
     private final HourglassRepository hourglassRepository;
 
     public ResponseEntity<ApiResponse<DayStudyRecord>> getDayStudyRecord(LocalDate date, User user){
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = start.plusDays(1);
 
-        DayStudyRecord dayStudyRecord =  DayStudyRecord.from(studyStatisticsViewRepository
+        DayStudyRecord dayStudyRecord =  DayStudyRecord.from(studyStaticsViewRepository
                 .findHourglassStudyRecords(start,end,user.getId()));
 
         return ResponseEntity.ok(ApiResponse.success(dayStudyRecord));

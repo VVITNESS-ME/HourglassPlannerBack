@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface StudyStatisticsViewRepository extends JpaRepository<StudyStaticsView,Long> {
+public interface StudyStaticsViewRepository extends JpaRepository<StudyStaticsView,Long> {
 
     @Query("select new com.myweapon.hourglass.diary.dto.HourglassStudyRecord(s.hourglassId,s.categoryName,s.color " +
             ",s.taskTitle,s.start,s.end,s.burstTime,s.rating,s.hourglassContent) from StudyStaticsView s " +

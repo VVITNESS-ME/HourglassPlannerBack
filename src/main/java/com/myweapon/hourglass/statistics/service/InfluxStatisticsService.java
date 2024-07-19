@@ -5,6 +5,7 @@ import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.statistics.dto.field.BurstTimeByDay;
+import com.myweapon.hourglass.statistics.dto.field.BurstTimeByMonth;
 import com.myweapon.hourglass.statistics.dto.response.DayStatisticsResponse;
 import com.myweapon.hourglass.statistics.dto.response.GardenResponse;
 import com.myweapon.hourglass.statistics.dto.response.MonthStatisticsResponse;
@@ -90,6 +91,11 @@ public class InfluxStatisticsService implements TimeFlowStatisticsService {
         return hourglassAuditRepository.getBurstTimeByDay(start,end,user);
     }
 
+    @Override
+    public List<BurstTimeByMonth> getBurstTimeByMonthThatYear(LocalDate date,User user) {
+//        LocalDate
+        return null;
+    }
 
     private List<Integer> burstTimeByHourDuringDay(){
         return new ArrayList<>(Collections.nCopies(24,0));

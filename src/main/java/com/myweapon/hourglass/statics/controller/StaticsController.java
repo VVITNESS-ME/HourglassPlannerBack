@@ -46,7 +46,7 @@ public class StaticsController {
                     ,@AuthenticationPrincipal UserDetailsImpl userDetails){
         LocalDate date = DateTimeFrame.FROM_DAY.toLocalDate(dateString);
 
-        DateStartEnd dateStartEnd = week.getWeekInterval(date);
+        DateStartEnd dateStartEnd = week.getWeekDuration(date);
         LocalDateTime monday = dateStartEnd.getStartWithTime();
         LocalDateTime sunday = dateStartEnd.getEndWithTime();
 
