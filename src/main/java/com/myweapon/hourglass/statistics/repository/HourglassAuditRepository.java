@@ -10,6 +10,7 @@ import com.myweapon.hourglass.statistics.dto.field.BurstTimeByDay;
 import com.myweapon.hourglass.statistics.entity.HourglassAudit;
 import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -21,6 +22,8 @@ import java.util.*;
 public class HourglassAuditRepository {
     private final WriteApiBlocking writeApiBlocking;
     private final QueryApi queryApi;
+    @Value("${influx.bucket}")
+    private String bucket;
     public void recordStartLog(Hourglass hourglass, User user){
         HourglassAudit hourglassAudit = HourglassAudit.startOf(hourglass,user);
         writeApiBlocking.writeMeasurement(WritePrecision.S,hourglassAudit);
@@ -60,7 +63,7 @@ public class HourglassAuditRepository {
                         "|> filter(fn: (r) => r[\"_field\"] == \"burstTime\") " +
                         "|> aggregateWindow(every: 1d, fn: sum, createEmpty: true)"+
                         "|> fill(value:0)"
-                , InfluxDBConfig.bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
+                , bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
         List<FluxTable> tables = queryApi.query(flux);
 
         if (tables.isEmpty()){
@@ -80,7 +83,7 @@ public class HourglassAuditRepository {
                         "|> filter(fn: (r) => r._field == \"burstTime\") " +
                         "|> filter(fn: (r) => r._value != 0)"+
                         "|> keep(columns: [\"_time\", \"_value\"])"
-                , InfluxDBConfig.bucket, dateIsoInstanceString, nextDateStartIsoInstanceString, user.getId());
+                , bucket, dateIsoInstanceString, nextDateStartIsoInstanceString, user.getId());
         List<FluxTable> tables = queryApi.query(flux);
 
         if (tables.isEmpty()){
