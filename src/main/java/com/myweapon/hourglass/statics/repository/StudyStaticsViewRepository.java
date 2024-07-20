@@ -16,7 +16,7 @@ public interface StudyStaticsViewRepository extends JpaRepository<StudyStaticsVi
 
     @Query("select new com.myweapon.hourglass.diary.dto.HourglassStudyRecord(s.hourglassId,s.categoryName,s.color " +
             ",s.taskTitle,s.start,s.end,s.burstTime,s.rating,s.hourglassContent) from StudyStaticsView s " +
-            "where s.userId = :userId and s.end between :start and :end order by s.end desc ")
+            "where s.userId = :userId and s.end between :start and :end order by s.hourglassId desc ")
     public List<HourglassStudyRecord> findHourglassStudyRecords(@Param("start") LocalDateTime start, @Param("end")LocalDateTime end, @Param("userId") Long userId);
 
     @Query("select new com.myweapon.hourglass.statics.dto.TotalBurstByDay(s.end,sum(s.burstTime))" +
