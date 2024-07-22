@@ -1,7 +1,9 @@
 package com.myweapon.hourglass.today.i.learned.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;
+import jdk.jfr.ContentType;
 import lombok.*;
 
 @Embeddable
@@ -11,9 +13,8 @@ import lombok.*;
 @Builder(access = AccessLevel.PRIVATE)
 public class DocumentContent {
 
-    @Lob
     private String title;
-    @Lob
+    @Column(length = 10000)
     private String content;
 
     public DocumentContent withTitleAt(String title){

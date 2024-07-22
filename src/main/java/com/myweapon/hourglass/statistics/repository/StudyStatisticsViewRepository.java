@@ -26,5 +26,5 @@ public interface StudyStatisticsViewRepository extends JpaRepository<UserHourgla
             "where s.userId = :userId and s.end between :start and :end " +
             "group by s.userCategoryId")
     public List<BurstTimeByCategories> getCategoryBurstTimeByCategories
-            (@Param("start") LocalDateTime start, @Param("end")  LocalDateTime end, User user);
+            (@Param("start") LocalDateTime start, @Param("end")  LocalDateTime end, @Param("userId") Long userId);
 }

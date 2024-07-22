@@ -54,7 +54,7 @@ public class HourglassAudit {
             last = hourglass.getLast_resume();
         }
 
-        return splitHourglassAuditByDay(hourglass,user,last);
+        return splitHourglassAuditByDay(hourglass,user,last,PAUSE);
     }
     public static HourglassAudit resumeOf(Hourglass hourglass, User user){
         return of(hourglass,user,0,RESUME,hourglass.getLast_resume());
@@ -69,15 +69,19 @@ public class HourglassAudit {
             last = hourglass.getLast_resume();
         }
 
-        return splitHourglassAuditByDay(hourglass,user,last);
+        return splitHourglassAuditByDay(hourglass,user,last,END);
     }
 
-    private static List<HourglassAudit> splitHourglassAuditByDay(Hourglass hourglass,User user,LocalDateTime last){
+    private static List<HourglassAudit> splitHourglassAuditByDay(Hourglass hourglass,User user,LocalDateTime last,String type){
         LocalDateTime end = hourglass.getEnd();
+        if(end == null){
+            end = hourglass.getLast_pause();
+        }
+
         List<HourglassAudit> audits = new ArrayList<>();
 
         if(last.isAfter(end)){
-            throw new RestApiException(ErrorType.DUPLICATED_NAME);
+            throw new RestApiException(ErrorType.TIME_ORDER_ERROR);
         }
 
         while(!last.toLocalDate().equals(end.toLocalDate())){
@@ -88,10 +92,10 @@ public class HourglassAudit {
             last = lastOfDateFromLast.plusSeconds(1);
         }
 
-        Duration duration = Duration.between(last,hourglass.getEnd());
+        Duration duration = Duration.between(last,end);
         Integer burstTime =(int)duration.toSeconds();
 
-        audits.add(of(hourglass,user,burstTime,END,hourglass.getEnd()));
+        audits.add(of(hourglass,user,burstTime,type,end));
 
         return audits;
     }

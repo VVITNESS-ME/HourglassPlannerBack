@@ -12,13 +12,17 @@ import org.springframework.context.annotation.Configuration;
 public class InfluxDBConfig {
     @Value("${influx.token}")
     private String tokenString;
+
+    @Value("${influx.url}")
+    private String url;
+
     public static String org = "hourglass";
-    public static String bucket = "tt";
+    public static String bucket = "test";
 
     @Bean
     public InfluxDBClient influxDBClient(){
         char[] token = tokenString.toCharArray();
-         return InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
+         return InfluxDBClientFactory.create(url, token, org, bucket);
     }
 
     @Bean

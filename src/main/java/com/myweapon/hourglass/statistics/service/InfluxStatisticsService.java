@@ -93,8 +93,7 @@ public class InfluxStatisticsService implements TimeFlowStatisticsService {
 
     @Override
     public List<BurstTimeByMonth> getBurstTimeByMonthThatYear(LocalDate date,User user) {
-//        LocalDate
-        return null;
+        return hourglassAuditRepository.getBurstTimeByMonth(date,user);
     }
 
     private List<Integer> burstTimeByHourDuringDay(){

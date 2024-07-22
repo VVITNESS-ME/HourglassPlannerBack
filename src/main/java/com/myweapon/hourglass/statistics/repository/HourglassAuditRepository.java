@@ -7,6 +7,7 @@ import com.influxdb.query.FluxTable;
 import com.myweapon.hourglass.config.InfluxDBConfig;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.statistics.dto.field.BurstTimeByDay;
+import com.myweapon.hourglass.statistics.dto.field.BurstTimeByMonth;
 import com.myweapon.hourglass.statistics.entity.HourglassAudit;
 import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
@@ -53,13 +55,16 @@ public class HourglassAuditRepository {
     public List<BurstTimeByDay> getBurstTimeByDay(LocalDate start, LocalDate end, User user) {
         String startIsoInstanceString = localDateToIsoInstantString(start);
         String endIsoInstanceString = localDateToIsoInstantString(end);
-        String flux = String.format("from(bucket:\"%s\") " +
+        String flux = String.format("import \"experimental\" "+
+                        "from(bucket:\"%s\") " +
                         "|> range(start:%s, stop:%s) " +
+                        "|> filter(fn: (r) => r[\"_measurement\"] == \"hourglassAudit\") " +
                         "|> filter(fn: (r) => r.userId == \"%s\") " +
                         "|> drop(columns: [\"hourglassId\"]) " +
                         "|> filter(fn: (r) => r[\"_field\"] == \"burstTime\") " +
                         "|> aggregateWindow(every: 1d, fn: sum, createEmpty: true)"+
-                        "|> fill(value:0)"
+                        "|> fill(value:0) " +
+                        "|> map(fn: (r) => ({ r with _time: experimental.addDuration(d: -1d, to:r._time) })) "
                 , InfluxDBConfig.bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
         List<FluxTable> tables = queryApi.query(flux);
 
@@ -75,6 +80,7 @@ public class HourglassAuditRepository {
 
         String flux = String.format("from(bucket:\"%s\") " +
                         "|> range(start:%s, stop:%s) " +
+                        "|> filter(fn: (r) => r[\"_measurement\"] == \"hourglassAudit\")" +
                         "|> filter(fn: (r) => r.userId == \"%s\") " +
                         "|> drop(columns: [\"hourglassId\"]) " +
                         "|> filter(fn: (r) => r._field == \"burstTime\") " +
@@ -89,7 +95,33 @@ public class HourglassAuditRepository {
         return Optional.of(tables.get(0));
     }
 
-//    public
+    public List<BurstTimeByMonth> getBurstTimeByMonth(LocalDate date,User user){
+        String startOfYear = localDateToIsoInstantString(date.withDayOfYear(1));
+        String endOfYear = localDateToIsoInstantString(date.withDayOfYear(1).plusYears(1));
+
+        String flux = String.format("import \"experimental\" "+
+                "from(bucket: \"%s\") " +
+                "|> range(start: %s, stop: %s) " +
+                "|> filter(fn: (r) => r[\"_measurement\"] == \"hourglassAudit\") " +
+                "|> filter(fn: (r) => r.userId == \"%s\") " +
+                "|> drop(columns: [\"hourglassId\"]) " +
+                "|> filter(fn: (r) => r._field == \"burstTime\") " +
+                "|> aggregateWindow(every: 1mo, fn: sum, createEmpty: true) " +
+                "|> map(fn: (r) => ({ r with _time: experimental.addDuration(d: -1mo, to:r._time) })) " +
+                "|> fill(column: \"_value\", value: 0)"
+                ,InfluxDBConfig.bucket, startOfYear,endOfYear,user.getId());
+
+        List<FluxTable> tables = queryApi.query(flux);
+        if (tables.isEmpty()){
+            return Stream.iterate(1,e->e+1)
+                    .limit(12)
+                    .map(BurstTimeByMonth::emptyOf)
+                    .toList();
+        }
+        return tables.get(0).getRecords().stream()
+                .map(BurstTimeByMonth::of)
+                .toList();
+    }
 
     private String localDateToIsoInstantString(LocalDate localDate){
         return localDate

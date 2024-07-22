@@ -16,7 +16,7 @@ public class SimpleCategoryStatisticsService implements CategoryStatisticsServic
     private final StudyStatisticsViewRepository studyStatisticsViewRepository;
     @Override
     public List<BurstTimeByCategories> getBurstTimeByCategories(LocalDateTime start, LocalDateTime end, User user) {
-        return studyStatisticsViewRepository.getCategoryBurstTimeByCategories(start,end,user);
+        return studyStatisticsViewRepository.getCategoryBurstTimeByCategories(start,end,user.getId());
     }
 
     @Override

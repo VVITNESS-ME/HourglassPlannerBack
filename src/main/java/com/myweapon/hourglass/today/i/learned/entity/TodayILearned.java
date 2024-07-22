@@ -55,7 +55,7 @@ public class TodayILearned implements Auditable {
 
     @Override
     public Optional<LocalDateTime> getUpdatedAt() {
-        return Optional.ofNullable(dateAudit.getCreatedAt());
+        return Optional.ofNullable(dateAudit.getUpdatedAt());
     }
 
     @Override
