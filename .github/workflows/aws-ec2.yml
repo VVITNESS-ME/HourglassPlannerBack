@@ -1,0 +1,51 @@
+name: Deploy Spring Application to Amazon EC2
+
+on:
+  push:
+    branches: [ "aws" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST }} << 'EOF'
+            #!/bin/bash
+          
+            # 새로운 배포를 위해 디렉토리로 이동합니다.
+            cd /home/ubuntu/testspring/HourglassPlannerBack
+          
+            # Git 명령어를 실행합니다.
+            git pull
+            git checkout origin/aws
+          
+            # Spring Boot Application을 build합니다.
+            ./gradlew build
+          
+            # 포트를 사용 중인 프로세스를 종료합니다.
+            PORT=8080
+            PID=$(lsof -t -i:$PORT)
+            if [ ! -z "$PID" ]; then
+              kill -9 $PID
+              echo "Process on port $PORT stopped."
+            else
+              echo "No process running on port $PORT."
+            fi
+          
+            # jar파일을 백그라운드로 실행합니다.
+            cd /home/ubuntu/testspring/HourglassPlannerBack/build/libs
+            java -jar hourglass-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+          
+            exit
+          EOF
