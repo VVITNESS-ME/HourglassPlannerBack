@@ -11,6 +11,7 @@ import com.myweapon.hourglass.statistics.dto.field.BurstTimeByMonth;
 import com.myweapon.hourglass.statistics.entity.HourglassAudit;
 import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -23,6 +24,8 @@ import java.util.stream.Stream;
 public class HourglassAuditRepository {
     private final WriteApiBlocking writeApiBlocking;
     private final QueryApi queryApi;
+    @Value("${influx.bucket}")
+    private String bucket;
     public void recordStartLog(Hourglass hourglass, User user){
         HourglassAudit hourglassAudit = HourglassAudit.startOf(hourglass,user);
         writeApiBlocking.writeMeasurement(WritePrecision.S,hourglassAudit);
@@ -63,9 +66,14 @@ public class HourglassAuditRepository {
                         "|> drop(columns: [\"hourglassId\"]) " +
                         "|> filter(fn: (r) => r[\"_field\"] == \"burstTime\") " +
                         "|> aggregateWindow(every: 1d, fn: sum, createEmpty: true)"+
+//<<<<<<< HEAD
                         "|> fill(value:0) " +
                         "|> map(fn: (r) => ({ r with _time: experimental.addDuration(d: -1d, to:r._time) })) "
-                , InfluxDBConfig.bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
+                , bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
+//=======
+//                        "|> fill(value:0)"
+//                , bucket, startIsoInstanceString, endIsoInstanceString, user.getId());
+//>>>>>>> 86347c3c8d3ecdd0a6f8c8400a926ba8607308cb
         List<FluxTable> tables = queryApi.query(flux);
 
         if (tables.isEmpty()){
@@ -86,7 +94,7 @@ public class HourglassAuditRepository {
                         "|> filter(fn: (r) => r._field == \"burstTime\") " +
                         "|> filter(fn: (r) => r._value != 0)"+
                         "|> keep(columns: [\"_time\", \"_value\"])"
-                , InfluxDBConfig.bucket, dateIsoInstanceString, nextDateStartIsoInstanceString, user.getId());
+                , bucket, dateIsoInstanceString, nextDateStartIsoInstanceString, user.getId());
         List<FluxTable> tables = queryApi.query(flux);
 
         if (tables.isEmpty()){
@@ -109,7 +117,7 @@ public class HourglassAuditRepository {
                 "|> aggregateWindow(every: 1mo, fn: sum, createEmpty: true) " +
                 "|> map(fn: (r) => ({ r with _time: experimental.addDuration(d: -1mo, to:r._time) })) " +
                 "|> fill(column: \"_value\", value: 0)"
-                ,InfluxDBConfig.bucket, startOfYear,endOfYear,user.getId());
+                ,bucket, startOfYear,endOfYear,user.getId());
 
         List<FluxTable> tables = queryApi.query(flux);
         if (tables.isEmpty()){
@@ -129,5 +137,4 @@ public class HourglassAuditRepository {
                 .toInstant(ZoneOffset.UTC)
                 .toString();
     }
-
 }

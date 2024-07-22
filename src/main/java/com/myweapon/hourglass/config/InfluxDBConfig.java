@@ -14,15 +14,20 @@ public class InfluxDBConfig {
     private String tokenString;
 
     @Value("${influx.url}")
-    private String url;
 
-    public static String org = "hourglass";
-    public static String bucket = "test";
+    private String influxUrl;
+
+    @Value("${influx.bucket}")
+    private String bucket;
+
+    @Value("${influx.org}")
+    private String org;
+
 
     @Bean
     public InfluxDBClient influxDBClient(){
         char[] token = tokenString.toCharArray();
-         return InfluxDBClientFactory.create(url, token, org, bucket);
+         return InfluxDBClientFactory.create(influxUrl, token, org, bucket);
     }
 
     @Bean
