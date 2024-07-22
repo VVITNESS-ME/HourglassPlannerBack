@@ -7,10 +7,7 @@ import com.myweapon.hourglass.security.dto.SignUpRequest;
 import com.myweapon.hourglass.security.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -26,5 +23,10 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<JwtAuthenticationResponse>> signin(@RequestBody SignInRequest request){
         return authenticationService.signin(request);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.ok("is valid API Test");
     }
 }
