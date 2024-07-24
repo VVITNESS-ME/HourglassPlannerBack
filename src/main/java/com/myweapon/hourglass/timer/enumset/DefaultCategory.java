@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 @Getter
 public enum DefaultCategory {
-    READING("독서",1L,"#87ceeb"),
-    ALGORITHM("알고리즘",2L,"#9acd32"),
-    HOMEWORK("과제",3L,"#ffb6c1"),
-    OTHERS("기타",4L,"#a9a9a9");
+    READING("독서",1L,"#EAD1BC"),
+    ALGORITHM("알고리즘",2L,"#EBEBBD"),
+    HOMEWORK("과제",3L,"#CAEBEA"),
+    OTHERS("기타",4L,"#E8C6E0");
 
     private final String name;
     private Long id;
