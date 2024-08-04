@@ -34,6 +34,7 @@ public class UserTitleDto {
         List<TitleDto> titleList = new ArrayList<>();
         for (Title title : Title.values()) {
             try {
+                if (title.getIndex() == 0) continue;
                 Field field = this.getClass().getDeclaredField("title" + title.getIndex());
                 field.setAccessible(true);
                 Boolean value = (Boolean) field.get(this);
@@ -42,6 +43,7 @@ public class UserTitleDto {
                             .id(title.getIndex())
                             .name(title.getTitleName())
                             .achieveCondition(title.getAchievementCondition())
+                            .titleColor(title.getTitleColor())
                             .build());
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -52,9 +54,18 @@ public class UserTitleDto {
     }
 
     public TitleResponse toTitleResponse(){
+        Title mainTitle = Title.getTitleOfNumber(main_title);
+        TitleDto mainTitleDto = TitleDto.builder()
+                .id(mainTitle.getIndex())
+                .name(mainTitle.getTitleName())
+                .achieveCondition(mainTitle.getAchievementCondition())
+                .titleColor(mainTitle.getTitleColor())
+                .build();
+
         return TitleResponse.builder()
                 .achievedTitleList(getTitleList(true))
                 .notAchievedTitleList(getTitleList(false))
+                .mainTitle(mainTitleDto)
                 .build();
     }
 }

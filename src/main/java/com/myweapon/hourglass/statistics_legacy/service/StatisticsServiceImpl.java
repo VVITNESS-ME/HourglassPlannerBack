@@ -1,9 +1,9 @@
-package com.myweapon.hourglass.statistics.service;
+package com.myweapon.hourglass.statistics_legacy.service;
 
 import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.statistics.dto.*;
-import com.myweapon.hourglass.statistics.repository.StudyStaticsViewRepository;
+import com.myweapon.hourglass.statistics_legacy.dto.*;
+import com.myweapon.hourglass.statistics_legacy.repository.StudyStaticsViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StaticsService {
+public class StatisticsServiceImpl {
     private final StudyStaticsViewRepository studyStaticsViewRepository;
     public List<TotalBurstByDay> calculateTotalBurstByDaysOf(LocalDateTime start, LocalDateTime end, User user){
         return studyStaticsViewRepository.calculateTotalBurstByDaysOf(start,end,user.getId());

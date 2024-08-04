@@ -39,8 +39,10 @@ public class SecurityConfiguration {
                 -> response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"));
 
         http.csrf(AbstractHttpConfigurer::disable).cors(corsConfigurer->corsConfigurer.configurationSource(corsConfigurationSource))
-                .authorizeHttpRequests(request -> request.requestMatchers("/user/**")
-                        .permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/together/participants/**").permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -48,7 +50,6 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(authenticationEntryPoint) //인증 실패시 에러 처리
                         .accessDeniedHandler(accessDeniedHandler) //인가 실패시 에러 처리
                 );
-
         return http.build();
     }
 

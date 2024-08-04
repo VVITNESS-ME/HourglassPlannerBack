@@ -68,7 +68,6 @@ public class ChatGPTEnhancedTodayILearnedService implements TodayILearnedService
         chatMsgList.add(ChatGPTService.createSystemChatRequestMsgDtoFrom(GPT_SYSTEM_MESSAGE));
 
         ChatResponseDto result =  chatGPTService.prompt(ChatGPTService.createChatCompletionDtoFrom(chatMsgList));
-//        System.out.println(result.getChoices());
 
         return ChatResponseToDocumentContentDto(result);
     }

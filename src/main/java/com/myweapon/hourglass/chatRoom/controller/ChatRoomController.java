@@ -46,7 +46,7 @@ public class ChatRoomController {
             return ResponseEntity.ok(ApiResponse.success(token));
     }
 
-    @PostMapping("/participants/{id}")
+    @PutMapping("/participants/{id}")
     public ResponseEntity<ApiResponse<Void>> leaveChatRoom(@PathVariable Long id, @RequestBody ParticipantsRequest participantsRequest) {
         chatRoomService.changeParticipants(id, participantsRequest.getCurrent());
         return ResponseEntity.ok(ApiResponse.success(null));

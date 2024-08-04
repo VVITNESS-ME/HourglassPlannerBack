@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.statistics.dto;
+package com.myweapon.hourglass.statistics_legacy.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

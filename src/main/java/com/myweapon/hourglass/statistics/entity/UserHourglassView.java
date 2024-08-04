@@ -10,7 +10,6 @@ import org.hibernate.annotations.Subselect;
 
 import java.time.LocalDateTime;
 
-
 @Immutable
 @Subselect("select h.id as hourglass_id,u.id as user_id,t.id as task_id,uc.id as user_category_id " +
         ",t.title as task_title,c.name as category_name, uc.color as color " +
@@ -25,7 +24,7 @@ import java.time.LocalDateTime;
 @Entity
 @EqualsAndHashCode
 @ToString
-public class StudyStaticsView {
+public class UserHourglassView {
     @Id
     private Long hourglassId;
     private Long userId;

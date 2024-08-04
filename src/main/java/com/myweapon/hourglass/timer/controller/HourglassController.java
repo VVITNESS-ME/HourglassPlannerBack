@@ -59,12 +59,14 @@ public class HourglassController {
     }
 
     @PostMapping("/pause")
-    public ResponseEntity<ApiResponse<HourglassResponse>> pauseHourglass(@RequestBody HourglassPauseRequest hourglassPauseRequest){
-        return hourglassService.pauseHourglass(hourglassPauseRequest);
+    public ResponseEntity<ApiResponse<HourglassResponse>> pauseHourglass(@RequestBody HourglassPauseRequest hourglassPauseRequest
+            ,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return hourglassService.pauseHourglass(hourglassPauseRequest,userDetails.getUser());
     }
 
     @PostMapping("/restart")
-    public ResponseEntity<ApiResponse<HourglassResponse>> resumeHourglass(@RequestBody HourglassResumeRequest hourglassPauseRequest){
-        return hourglassService.resumeHourglass(hourglassPauseRequest);
+    public ResponseEntity<ApiResponse<HourglassResponse>> resumeHourglass(@RequestBody HourglassResumeRequest hourglassPauseRequest
+            ,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return hourglassService.resumeHourglass(hourglassPauseRequest,userDetails.getUser());
     }
 }

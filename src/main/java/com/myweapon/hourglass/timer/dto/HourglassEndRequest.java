@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myweapon.hourglass.common.time.TimeUtils;
 import com.myweapon.hourglass.timer.contants.HourglassConstant;
 import com.myweapon.hourglass.timer.enumset.DefaultCategory;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -15,16 +15,17 @@ public enum Week {
 
     private final Integer weekCode;
     private final String name;
-    private final Function<LocalDate,DateStartEnd> getWeekInterval;
+    private final Function<LocalDate,WeekDuration> getWeekInterval;
 
-    Week(Integer weekCode,String name,Function<LocalDate,DateStartEnd> getWeekInterval){
+    Week(Integer weekCode,String name,Function<LocalDate,WeekDuration> getWeekInterval){
         this.weekCode = weekCode;
         this.name = name;
         this.getWeekInterval = getWeekInterval;
     }
 
-    private static DateStartEnd findWeekInterval(LocalDate date,Integer before){
-        return DateStartEnd.of(date.minusDays(before),DateTimeFrameConstants.WEEK_DAYS);
+    private static WeekDuration findWeekInterval(LocalDate date,Integer before){
+        DateStartEnd dateStartEnd = DateStartEnd.of(date.minusDays(before),DateTimeFrameConstants.WEEK_DAYS);
+        return WeekDuration.of(dateStartEnd);
     }
 
 
@@ -42,7 +43,7 @@ public enum Week {
         throw new IllegalArgumentException("No matching weekCode");
     }
 
-    public DateStartEnd getWeekInterval(LocalDate date){
+    public WeekDuration getWeekDuration(LocalDate date){
         return getWeekInterval.apply(date);
     }
 

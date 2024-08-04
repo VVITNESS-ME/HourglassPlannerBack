@@ -1,4 +1,4 @@
-package com.myweapon.hourglass.statistics.controller;
+package com.myweapon.hourglass.statistics_legacy.controller;
 
 import com.myweapon.hourglass.common.dto.ApiResponse;
 import com.myweapon.hourglass.common.time.DateStartEnd;
@@ -6,8 +6,9 @@ import com.myweapon.hourglass.common.time.DateTimeFrame;
 import com.myweapon.hourglass.common.time.Week;
 import com.myweapon.hourglass.security.UserDetailsImpl;
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.statistics.dto.*;
-import com.myweapon.hourglass.statistics.service.StaticsService;
+import com.myweapon.hourglass.statistics_legacy.dto.*;
+//import com.myweapon.hourglass.statics.service.StaticsService;
+import com.myweapon.hourglass.statistics_legacy.service.StatisticsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/statics")
 public class StaticsController {
 
-    private final StaticsService staticsService;
+    private final StatisticsServiceImpl staticsService;
 
     @GetMapping("/garden")
     public ResponseEntity<ApiResponse<GardenGetResponse>> getGardenOfInterval
@@ -45,7 +46,7 @@ public class StaticsController {
                     ,@AuthenticationPrincipal UserDetailsImpl userDetails){
         LocalDate date = DateTimeFrame.FROM_DAY.toLocalDate(dateString);
 
-        DateStartEnd dateStartEnd = week.getWeekInterval(date);
+        DateStartEnd dateStartEnd = week.getWeekDuration(date);
         LocalDateTime monday = dateStartEnd.getStartWithTime();
         LocalDateTime sunday = dateStartEnd.getEndWithTime();
 
