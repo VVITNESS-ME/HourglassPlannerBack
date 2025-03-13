@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -131,7 +132,7 @@ public class HourglassHistoryServiceImpl implements HourglassHistoryService{
 
     @Override
     public BurstTimesByDate sumBurstTimeByDate(User user, DateRangeType dateRangeType, DateTimeRange dateTimeRange){
-        List<BurstTimeWithDate> burstTimesWithDate;
+        List<BurstTimeWithDate> burstTimesWithDate = new ArrayList<>();
         if(dateRangeType.equals(DateRangeType.DAY)){
             burstTimesWithDate = hourglassHistoryRepository.sumHistoryByDay(user,dateTimeRange.getStart(),dateTimeRange.getEnd());
         }else if(dateRangeType.equals(DateRangeType.WEEK)){
