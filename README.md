@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 # Environment 
 Java : 17
 Spring Boot: 3.3.1

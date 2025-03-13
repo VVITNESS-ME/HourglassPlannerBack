@@ -2,7 +2,7 @@ package com.myweapon.hourglass.timer.service;
 
 import com.myweapon.hourglass.common.exception.RestApiException;
 import com.myweapon.hourglass.timer.dto.HourglassInfo;
-import com.myweapon.hourglass.timer.dto.db.DefaultHourglassHistoryInfo;
+import com.myweapon.hourglass.timer.dto.DefaultHourglassHistoryInfo;
 import com.myweapon.hourglass.timer.dto.request.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.request.HourglassRunRequest;
 import com.myweapon.hourglass.timer.dto.request.HourglassStopRequest;

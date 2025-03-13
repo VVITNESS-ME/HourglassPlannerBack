@@ -1,9 +1,9 @@
 package com.myweapon.hourglass.timer.service;
 
 import com.myweapon.hourglass.common.exception.RestApiException;
-import com.myweapon.hourglass.timer.dto.user_category.response.UserCategoryGetResponse;
+import com.myweapon.hourglass.timer.dto.user_category.response.UserCategoryResponse;
 import com.myweapon.hourglass.timer.dto.user_category.response.UserCategoryRequest;
-import com.myweapon.hourglass.timer.dto.user_category.UserCategoryWithName;
+import com.myweapon.hourglass.timer.dto.user_category.UserCategoryInfo;
 import com.myweapon.hourglass.timer.entity.Category;
 import com.myweapon.hourglass.timer.entity.UserCategory;
 import com.myweapon.hourglass.timer.exception.TimerRestApiException;
@@ -27,12 +27,12 @@ public class UserCategoryService {
     private final CategoryService categoryService;
 
     @Transactional
-    public ApiResponse<UserCategoryGetResponse> getUserCategory(User user){
-        List<UserCategoryWithName> userCategoriesWithName = userCategoryRepository.getUserCategoriesWithName(user);
+    public ApiResponse<UserCategoryResponse> getUserCategory(User user){
+        List<UserCategoryInfo> userCategoriesWithName = userCategoryRepository.getUserCategoriesWithName(user);
 
-        UserCategoryGetResponse userCategoryGetResponse = UserCategoryGetResponse.of(userCategoriesWithName);
+        UserCategoryResponse userCategoryResponse = UserCategoryResponse.of(userCategoriesWithName);
 
-        return ApiResponse.success(userCategoryGetResponse);
+        return ApiResponse.success(userCategoryResponse);
     }
 
     //중복된 이름의 userCategory를 만들어낼 수 있음. 차후에 예외처리
@@ -49,9 +49,9 @@ public class UserCategoryService {
         if(isNotUpdated(userCategoryRepository.deleteUserCategory(userCategoryId))){
             throw new RestApiException(ErrorType.USER_CATEGORY_NOT_EXISTS);
         }
-
         return ApiSuccess.body();
     }
+
     public UserCategory findUserCategoryById(Long userCategoryId){
         return userCategoryRepository.findById(userCategoryId).orElseThrow(()-> new TimerRestApiException(TimerRestApiException.NoSuchHourglass));
     }

@@ -1,11 +1,9 @@
-package com.myweapon.hourglass.timer.dto.db;
+package com.myweapon.hourglass.timer.dto;
 
+import com.myweapon.hourglass.timer.entity.HourglassHistory;
 import com.myweapon.hourglass.timer.enumset.HourglassState;
 import com.myweapon.hourglass.timer.exception.TimerRestApiException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class DefaultHourglassHistoryInfo {
     Long id;
     LocalDateTime instant;
@@ -27,4 +26,14 @@ public class DefaultHourglassHistoryInfo {
                 .orElseThrow(()-> TimerRestApiException.of(TimerRestApiException.NoSuchHourglassState));
         this.burstTime = burstTime;
     }
+    public static DefaultHourglassHistoryInfo of(HourglassHistory hourglassHistory){
+        return DefaultHourglassHistoryInfo
+                .builder()
+                .hourglassState(hourglassHistory.getState())
+                .burstTime(hourglassHistory.getBurstSecond())
+                .id(hourglassHistory.getId())
+                .instant(hourglassHistory.getInstant())
+                .build();
+    }
+
 }

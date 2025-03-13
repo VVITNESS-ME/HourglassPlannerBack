@@ -22,6 +22,8 @@ public class TimerRestApiException extends RuntimeException{
     public static final String CannotPause = "중지할 수 없습니다.";
     public static final String CannotRestart = "재시작할 수 없습니다.";
 
+    public static final String NoSuchDateRangeType = "해당하는 DateRangeType이 존재하지 않습니다.";
+
     public TimerRestApiException(String message){
         super(message);
     }

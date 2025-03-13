@@ -2,13 +2,18 @@ package com.myweapon.hourglass.timer.service;
 
 
 import com.myweapon.hourglass.security.entity.User;
-import com.myweapon.hourglass.timer.dto.db.DefaultHourglassHistoryInfo;
+import com.myweapon.hourglass.timer.dto.BurstTimeWithDate;
+import com.myweapon.hourglass.timer.dto.DateTimeRange;
+import com.myweapon.hourglass.timer.dto.DefaultHourglassHistoryInfo;
+import com.myweapon.hourglass.timer.dto.HourglassHistoryInfoWithCategory;
 import com.myweapon.hourglass.timer.dto.request.HourglassEndRequest;
 import com.myweapon.hourglass.timer.dto.request.HourglassRunRequest;
 import com.myweapon.hourglass.timer.dto.request.HourglassStartRequest;
 import com.myweapon.hourglass.timer.dto.request.HourglassStopRequest;
+import com.myweapon.hourglass.timer.dto.response.BurstTimesByDate;
 import com.myweapon.hourglass.timer.entity.Hourglass;
 import com.myweapon.hourglass.timer.entity.HourglassHistory;
+import com.myweapon.hourglass.timer.enumset.DateRangeType;
 import com.myweapon.hourglass.timer.enumset.HourglassState;
 import com.myweapon.hourglass.timer.exception.TimerRestApiException;
 import com.myweapon.hourglass.timer.respository.HourglassHistoryRepository;
@@ -18,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -107,11 +114,38 @@ public class HourglassHistoryServiceImpl implements HourglassHistoryService{
         }
     }
 
-
     private long save(HourglassHistory hourglassHistory){
         hourglassHistoryRepository.save(hourglassHistory);
         hourglassHistoryRepository.flush();//pk가 identitiy라 바로 반영되긴 하겠지만 나중에 바뀔 경우를 대비해서 남겨둠.
         return hourglassHistory.getId();
     }
 
+    @Override
+    public List<HourglassHistoryInfoWithCategory> findHourglassHistoriesByUserAndDateTimeRange(User user, DateTimeRange dateTimeRange){
+        return hourglassHistoryRepository
+                .findStopHourglassHistoryWithCategoryBy(user,dateTimeRange.getStart(),dateTimeRange.getEnd())
+                .stream()
+                .map(HourglassHistoryInfoWithCategory::of)
+                .toList();
+    }
+
+    @Override
+    public BurstTimesByDate sumBurstTimeByDate(User user, DateRangeType dateRangeType, DateTimeRange dateTimeRange){
+        List<BurstTimeWithDate> burstTimesWithDate;
+        if(dateRangeType.equals(DateRangeType.DAY)){
+            burstTimesWithDate = hourglassHistoryRepository.sumHistoryByDay(user,dateTimeRange.getStart(),dateTimeRange.getEnd());
+        }else if(dateRangeType.equals(DateRangeType.WEEK)){
+            burstTimesWithDate = hourglassHistoryRepository.sumHistoryByWeek(user,dateTimeRange.getStart(),dateTimeRange.getEnd());
+        }else if(dateRangeType.equals(DateRangeType.MONTH)){
+            burstTimesWithDate = hourglassHistoryRepository.sumHistoryByMonth(user,dateTimeRange.getStart(),dateTimeRange.getEnd());
+        }else{
+            throw new TimerRestApiException(TimerRestApiException.NoSuchTask);
+        }
+
+        Map<LocalDateTime,Integer> burstTimesByDate = burstTimesWithDate
+                .stream()
+                .collect(Collectors.toMap(BurstTimeWithDate::getLocalDateTime,BurstTimeWithDate::getBurstTime));
+
+        return BurstTimesByDate.of(dateRangeType,burstTimesByDate);
+    }
 }

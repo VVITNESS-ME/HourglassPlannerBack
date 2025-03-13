@@ -25,4 +25,8 @@ public enum HourglassState {
                 .findFirst();
     }
 
+    public String toString(){
+        return state;
+    }
+
 }

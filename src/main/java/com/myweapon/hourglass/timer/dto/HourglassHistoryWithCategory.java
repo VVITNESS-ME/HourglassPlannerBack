@@ -1,14 +1,17 @@
-package com.myweapon.hourglass.timer.dto.user_category;
+package com.myweapon.hourglass.timer.dto;
 
+import com.myweapon.hourglass.timer.entity.HourglassHistory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class UserCategoryWithName {
+public class HourglassHistoryWithCategory {
+    private HourglassHistory hourglassHistory;
     private Long userCategoryId;
     private String categoryName;
     private String color;
+
 }

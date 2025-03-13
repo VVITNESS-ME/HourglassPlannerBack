@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.timer.respository;
 
-import com.myweapon.hourglass.timer.dto.user_category.UserCategoryWithName;
+import com.myweapon.hourglass.timer.dto.user_category.UserCategoryInfo;
 import com.myweapon.hourglass.security.entity.User;
 import com.myweapon.hourglass.timer.entity.UserCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,12 +21,12 @@ public interface UserCategoryRepository extends JpaRepository<UserCategory,Long>
     public Optional<UserCategory> findByUserAndCategoryName(@Param("user_id") Long user_id,@Param("name")String name);
 
 
-    @Query("select new com.myweapon.hourglass.timer.dto.user_category.UserCategoryWithName(uc.id,c.name,uc.color) " +
+    @Query("select new com.myweapon.hourglass.timer.dto.user_category.UserCategoryInfo(uc.id,c.name,uc.color) " +
             "from UserCategory uc " +
             "inner join Category c " +
             "on uc.category = c " +
             "where uc.user = :user and uc.isDeleted = false ")
-    public List<UserCategoryWithName> getUserCategoriesWithName(User user);
+    public List<UserCategoryInfo> getUserCategoriesWithName(User user);
 
     @Transactional
     @Modifying(flushAutomatically = true)

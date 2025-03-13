@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.timer.controller;
 
-import com.myweapon.hourglass.timer.dto.user_category.response.UserCategoryGetResponse;
+import com.myweapon.hourglass.timer.dto.user_category.response.UserCategoryResponse;
 import com.myweapon.hourglass.timer.dto.user_category.response.UserCategoryRequest;
 import com.myweapon.hourglass.timer.service.UserCategoryService;
 import com.myweapon.hourglass.common.dto.ApiResponse;
@@ -19,7 +19,7 @@ public class UserCategoryController {
     private final UserCategoryTaskManger userCategoryTaskManger;
 
     @GetMapping("")
-    public ApiResponse<UserCategoryGetResponse>getUserCategory(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponse<UserCategoryResponse>getUserCategory(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return userCategoryService.getUserCategory(userDetails.getUser());
     }
 

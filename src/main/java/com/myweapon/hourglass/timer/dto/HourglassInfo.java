@@ -1,6 +1,5 @@
 package com.myweapon.hourglass.timer.dto;
 
-import com.myweapon.hourglass.timer.dto.db.DefaultHourglassHistoryInfo;
 import com.myweapon.hourglass.timer.entity.Hourglass;
 import lombok.*;
 

@@ -1,6 +1,6 @@
 package com.myweapon.hourglass.timer.dto.user_category.response;
 
-import com.myweapon.hourglass.timer.dto.user_category.UserCategoryWithName;
+import com.myweapon.hourglass.timer.dto.user_category.UserCategoryInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserCategoryGetResponse {
-    private List<UserCategoryWithName> userCategoriesWithName;
+public class UserCategoryResponse {
+    private List<UserCategoryInfo> userCategoriesWithName;
 
-    public static UserCategoryGetResponse of(List<UserCategoryWithName> userCategoriesWithName){
-        return UserCategoryGetResponse.builder()
+    public static UserCategoryResponse of(List<UserCategoryInfo> userCategoriesWithName){
+        return UserCategoryResponse.builder()
                 .userCategoriesWithName(userCategoriesWithName)
                 .build();
     }
