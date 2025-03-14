@@ -43,7 +43,7 @@ public interface HourglassHistoryRepository extends JpaRepository<HourglassHisto
             "join Category c on uc.category = c " +
             "where hh.user = :user " +
             "and hh.instant between :s and :e " +
-            "and hh.state='pause' and hh.state = 'end'")
+            "and hh.state='PAUSE' or hh.state = 'END'")
     public List<HourglassHistoryWithCategory> findStopHourglassHistoryWithCategoryBy(@Param("user") User user, @Param("s") LocalDateTime start, @Param("e") LocalDateTime end);
 
     @Query("select new com.myweapon.hourglass.timer.dto.BurstTimeWithDate(" +
@@ -53,15 +53,14 @@ public interface HourglassHistoryRepository extends JpaRepository<HourglassHisto
     public List<BurstTimeWithDate> sumHistoryByDay(@Param("user") User user, @Param("s") LocalDateTime start, @Param("e") LocalDateTime end);
     @Query("select new com.myweapon.hourglass.timer.dto.BurstTimeWithDate(" +
             "function('str_to_date'" +
-            ",function('concat',function('year',h.instant),function('yearweek',h.instant),'Sunday'),'%Y%V%W'), sum(h.burstSecond)) from HourglassHistory h " +
+            ",function('concat',function('yearweek',function('any_value',h.instant)),'Sunday'),'%X%V%W'), sum(h.burstSecond)) from HourglassHistory h " +
             "where h.user = :user and h.instant between :s and :e " +
             "group by function('yearweek',h.instant)")
     public List<BurstTimeWithDate> sumHistoryByWeek(@Param("user") User user, @Param("s") LocalDateTime start, @Param("e") LocalDateTime end);
 
     @Query("select new com.myweapon.hourglass.timer.dto.BurstTimeWithDate(" +
-            "function('date_format',h.instant,'%Y-%m-01'), sum(h.burstSecond)) from HourglassHistory h " +
+            "function('concat',function('date_format',function('any_value',h.instant),'%Y-%m'),'-01'), sum(h.burstSecond)) from HourglassHistory h " +
             "where h.user = :user and h.instant between :s and :e " +
             "group by function('date_format',h.instant,'%Y-%m')")
     public List<BurstTimeWithDate> sumHistoryByMonth(@Param("user") User user, @Param("s") LocalDateTime start, @Param("e") LocalDateTime end);
-
 }

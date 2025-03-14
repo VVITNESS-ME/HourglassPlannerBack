@@ -6,6 +6,8 @@ public class TimerRestApiException extends RuntimeException{
     public static final String NoSuchHourglassHistory = "모래시계 기록이 존재하지 않습니다.";
     public static final String NoSuchHourglass = "해당 모래시계가 존재하지 않습니다.";
 
+    public static final String NoSuchHourglassInProgress = "진행중인 모래시계가 존재하지 않습니다.";
+
     public static final String NoSuchTask = "해당 태스크는 존재하지 않습니다.";
     public static final String NoSuchUserCategory = "해당 유저 카테고리는 존재하지 않습니다.";
 

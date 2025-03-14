@@ -39,7 +39,7 @@ public enum DefaultCategory {
                 .filter((e)->e.getName().equals(name))
                 .findAny()
                 .orElseThrow(()->new DefaultCategoryException(DefaultCategoryException.NoSuchDefaultCategory))
-                .toString();
+                .getColor();
     }
 
     public void setId(Long id){

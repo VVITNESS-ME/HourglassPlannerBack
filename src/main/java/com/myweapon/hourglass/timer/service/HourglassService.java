@@ -117,6 +117,14 @@ public class HourglassService {
         return HourglassInfo.of(hourglass,histories);
     }
 
+    public HourglassInfo findHourglassInfoInProgressAndCheck(User user,String state){
+        HourglassInfo hourglassInfo = findHourglassInfoInProgress(user,state);
+        if(ObjectUtils.isEmpty(hourglassInfo)){
+            throw new TimerRestApiException(TimerRestApiException.NoSuchHourglassInProgress);
+        }
+        return hourglassInfo;
+    }
+
     public List<DefaultHourglassHistoryInfo> findHistoryByHourglass(Hourglass hourglass){
         List<DefaultHourglassHistoryInfo> histories = hourglassHistoryService.findHourglassHistoriesBy(hourglass);
         return histories;

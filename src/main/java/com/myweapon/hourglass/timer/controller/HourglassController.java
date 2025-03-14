@@ -43,12 +43,11 @@ public class HourglassController {
     }
 
     @GetMapping(path="",params="state")
-    public HourglassInfo getHourglassInfoInProgress(
+    public ApiResponse<HourglassInfo> getHourglassInfoInProgress(
             @RequestParam(name="state") String state,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-
         User user = userDetails.getUser();
-        return hourglassService.findHourglassInfoInProgress(user,state);
+        return ApiResponse.success(hourglassService.findHourglassInfoInProgress(user,state));
     }
 
 
