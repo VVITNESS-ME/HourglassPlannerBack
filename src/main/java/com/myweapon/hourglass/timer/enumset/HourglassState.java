@@ -28,5 +28,4 @@ public enum HourglassState {
     public String toString(){
         return state;
     }
-
 }

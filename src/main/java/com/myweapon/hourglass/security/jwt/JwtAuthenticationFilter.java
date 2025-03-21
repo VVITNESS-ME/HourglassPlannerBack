@@ -47,7 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 @NonNull HttpServletResponse response,
                                 @NonNull FilterChain filterChain) throws ServletException, IOException{
         String authToken = getJwt(request);
-        System.out.println(authToken);
 
         if(authToken==null){
             request.setAttribute("exception", ErrorType.NO_JWT);
@@ -63,7 +62,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        System.out.println(authToken);
         jwt = authToken.substring(7);
         if(!jwtService.validateToken(jwt)){
             request.setAttribute("exception", ErrorType.NOT_VALID_TOKEN);
@@ -72,7 +70,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         userName = jwtService.extractUserName(jwt);
-        System.out.println(userName);
         if(StringUtils.isNotEmpty(userName) && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             setAuthentication(userDetails,request);

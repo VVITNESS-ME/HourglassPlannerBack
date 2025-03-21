@@ -28,7 +28,6 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 public class HourglassService {
-
     private final HourglassRepository hourglassRepository;
     private final HourglassHistoryService hourglassHistoryService;
     private final TaskService taskService;

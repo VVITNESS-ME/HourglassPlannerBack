@@ -123,8 +123,6 @@ public class HourglassHistoryServiceImpl implements HourglassHistoryService{
 
     @Override
     public List<HourglassHistoryInfoWithCategory> findHourglassHistoriesByUserAndDateTimeRange(User user, DateTimeRange dateTimeRange){
-        System.out.println(dateTimeRange.getStart());
-        System.out.println(dateTimeRange.getEnd());
         return hourglassHistoryRepository
                 .findStopHourglassHistoryWithCategoryBy(user,dateTimeRange.getStart(),dateTimeRange.getEnd())
                 .stream()
